@@ -29,6 +29,7 @@ function LeftNavBar(props) {
   const title = {
     marginTop: "20px",
     marginBottom: "0px",
+    paddingBottom: "0px",
     textAlign: "center",
     backgroundColor: "white",
   }
@@ -40,9 +41,14 @@ function LeftNavBar(props) {
     marginBottom: "40px",
     maxWidth: "90px"
   }
+  const acronymStyle = {
+    fontSize: "10px",
+    textAlign: "center"
+  }
   return (
     <div style={navStyle}>
       <h1 style={title}>DREAM</h1>
+      <p style={acronymStyle}><em>data rules everything around me</em></p>
       <img style={iconStyle} src="./dream.png" />
       {DreamBubble({ title: "school", updateContent: props.updateContent })}
       {DreamBubble({ title: "gym", updateContent: props.updateContent })}
@@ -130,7 +136,7 @@ function SchoolContent() {
           percent: Math.round(1/6 * 100).toString() + "%" 
         })}
         {DoughnutGraph({ 
-          title: "DS Lecture", 
+          title: "Data Structures Lecture", 
           attended: 9, 
           total: 9, 
           percent: "100%" 
@@ -143,6 +149,18 @@ function SchoolContent() {
         })}
         {DoughnutGraph({
           title: "HONR 399 Lecture",
+          attended: 9,
+          total: 9,
+          percent: "100%"
+        })}
+        {DoughnutGraph({
+          title: "CP 399 Lecture",
+          attended: 0,
+          total: 3,
+          percent: "0%"
+        })}
+        {DoughnutGraph({
+          title: "COM Lecture",
           attended: 9,
           total: 9,
           percent: "100%"
