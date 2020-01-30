@@ -3,6 +3,8 @@ import { Doughnut } from 'react-chartjs-2';
 
 function App() {
   const [contentDisplay, updateContent] = useState("school");
+  const [pageData, updatePageData] = useState(null);
+  const [requestSent, updateRequestSent] = useState(false);
   const containerStyle = {
     display: "flex",
     width: "100%",
@@ -10,12 +12,22 @@ function App() {
     justifyContent: "center",
     paddingTop: "3%"
   }
-  return (
-    <div style={containerStyle}>
-      {LeftNavBar({ updateContent })}
-      {ContentContainer({ display: contentDisplay })}
-    </div>
-  );
+  if (!requestSent) {
+    fetch("http://localhost:8080").then(response => response.json()).then(data => {
+      updatePageData(data);
+      updateRequestSent(true);
+    });
+  } 
+  if (pageData == null) {
+    return null;
+  } else {
+    return (
+      <div style={containerStyle}>
+        {<LeftNavBar updateContent={updateContent} />}
+        {<ContentContainer d  pageData={pageData[contentDisplay]} />}
+      </div>
+    );
+  }
 }
 
 function LeftNavBar(props) {
@@ -60,6 +72,7 @@ function LeftNavBar(props) {
 }
 
 function DreamBubble(props) {
+  const [mouseHover, updateMouseHover] = useState(false);
   let bubbleStyle = {
     border: "3px solid black",
     width: "100px",
@@ -68,14 +81,14 @@ function DreamBubble(props) {
     margin: "0px auto",
     marginBottom: "60px",
     cursor: "pointer",
+    backgroundColor: mouseHover ? "#7880FF" : "white",
   }
   const labelStyle = {
     textAlign: "center",
     margin: "12px",
   }
-
   return (
-    <div style={bubbleStyle} onClick={() => props.updateContent(props.title)} >
+    <div style={bubbleStyle} onClick={() => props.updateContent(props.title)} onMouseEnter={() => updateMouseHover(true)} onMouseLeave={() => updateMouseHover(false)}>
       <h5 style={labelStyle}>{props.title}</h5>
     </div>
   )
@@ -92,27 +105,32 @@ function ContentContainer(props) {
     margin: "5%",
     marginTop: "0px"
   }
-  function renderContentDisplay() {
-    if (props.display == "school") {
-      return SchoolContent();
-    } else if (props.display == "gym") {
-      return GymContent();
-    } else if (props.display == "health") {
-      return GymContent();
-    } else if (props.display == "games") {
-      return GymContent();
-    }
-  }
   return (
     <div style={containerWrapperStyle}>
       <div style={pageContentStyle}>
-        {renderContentDisplay()}
+        {PageContent(props.pageData)}
       </div>
     </div>
   )
 }
 
-function SchoolContent() {
+function PageContent(props) {
+  let dataContainers = [];
+  props.forEach(dataContainer => {
+    dataContainers.push(
+      <div>
+        {DataContainer(dataContainer)}
+      </div>
+    );
+  })
+  return (
+    <div>
+      {dataContainers}
+    </div>
+  );
+}
+
+function DataContainer(props) {
   const graphContainerStyle = {
     display: "flex",
     position: "relative",
@@ -120,51 +138,24 @@ function SchoolContent() {
     maxWidth: "100%",
     flexWrap: "wrap"
   }
-  const sectionTitleStyle = {
-    textAlign: "center",
-    paddingTop: "5%",
-    paddingBottom: "2%"
+  const titleStyle = {
+    paddingTop: "2%",
+    marginTop: "0px",
+    textAlign: "center"
   }
+  let graphs = [];
+  props.data.forEach(graphData => {
+    graphs.push(
+      <div>
+        {DoughnutGraph(graphData)}
+      </div>
+    )
+  });
   return (
     <div>
-      <h2 style={sectionTitleStyle}>Class Attendance</h2>
+      <h2 style={titleStyle}>{props.title}</h2>
       <div style={graphContainerStyle}>
-        {DoughnutGraph({
-          title: "Econ Lecture",
-          attended: 1,
-          total: 6, 
-          percent: Math.round(1/6 * 100).toString() + "%" 
-        })}
-        {DoughnutGraph({ 
-          title: "Data Structures Lecture", 
-          attended: 9, 
-          total: 9, 
-          percent: "100%" 
-        })}
-        {DoughnutGraph({
-          title: "Compilers Lecture",
-          attended: 7,
-          total: 9,
-          percent: "78%"
-        })}
-        {DoughnutGraph({
-          title: "HONR 399 Lecture",
-          attended: 9,
-          total: 9,
-          percent: "100%"
-        })}
-        {DoughnutGraph({
-          title: "CP 399 Lecture",
-          attended: 0,
-          total: 3,
-          percent: "0%"
-        })}
-        {DoughnutGraph({
-          title: "COM Lecture",
-          attended: 9,
-          total: 9,
-          percent: "100%"
-        })}
+        {graphs}
       </div>
     </div>
   );
@@ -181,11 +172,11 @@ function DoughnutGraph(props) {
   }
   const data = {
     labels: [
-      'Attended',
-      'Missed'
+      props.completedLabel,
+      props.incompletedLabel
     ],
     datasets: [{
-      data: [props.attended, props.total - props.attended],
+      data: [props.completed, props.total - props.completed],
       backgroundColor: [
         '#7880FF',
         '#d6d6d6',
@@ -219,52 +210,6 @@ function DoughnutGraph(props) {
       <Doughnut data={data} options={options} />
     </div>
   )
-}
-
-function GymContent() {
-  const graphContainerStyle = {
-    display: "flex",
-    position: "relative",
-    justifyContent: "center",
-    maxWidth: "100%",
-    flexWrap: "wrap"
-  }
-  const sectionTitleStyle = {
-    textAlign: "center",
-    paddingTop: "5%",
-    paddingBottom: "2%"
-  }
-  return (
-    <div>
-      <h2 style={sectionTitleStyle}>Weekly Sets</h2>
-      <div style={graphContainerStyle}>
-        {DoughnutGraph({
-          title: "Biceps",
-          attended: 3,
-          total: 20,
-          percent: Math.round(3 / 20 * 100).toString() + "%"
-        })}
-        {DoughnutGraph({
-          title: "Triceps",
-          attended: 2,
-          total: 10,
-          percent: "20%"
-        })}
-        {DoughnutGraph({
-          title: "Back",
-          attended: 4,
-          total: 15,
-          percent: "33%"
-        })}
-        {DoughnutGraph({
-          title: "Legs",
-          attended: 0,
-          total: 9,
-          percent: "0%"
-        })}
-      </div>
-    </div>
-  );
 }
 
 export default App;
