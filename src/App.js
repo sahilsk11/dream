@@ -2,8 +2,147 @@ import React, { useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 
 function App() {
+  const data = {
+    school: [{
+      title: "Class Attendance",
+      data: [
+        {
+          title: "Econ Lecture",
+          completed: 1,
+          total: 6,
+          percent: 17,
+          completedLabel: "attended",
+          incompletedLabel: "missed"
+        },
+        {
+          title: "Data Structures Lecture",
+          completed: 9,
+          total: 9,
+          percent: 100,
+          completedLabel: "attended",
+          incompletedLabel: "missed"
+        },
+        {
+          title: "Comp Arch Lecture",
+          completed: 7,
+          total: 9,
+          percent: 78,
+          completedLabel: "attended",
+          incompletedLabel: "missed"
+        },
+        {
+          title: "COM Lecture",
+          completed: 9,
+          total: 9,
+          percent: 100,
+          completedLabel: "attended",
+          incompletedLabel: "missed"
+        },
+        {
+          title: "CP Lecture",
+          completed: 0,
+          total: 3,
+          percent: 0,
+          completedLabel: "attended",
+          incompletedLabel: "missed"
+        },
+        {
+          title: "HONR 399 Lecture",
+          completed: 6,
+          total: 6,
+          percent: 100,
+          completedLabel: "attended",
+          incompletedLabel: "missed"
+        },
+      ]
+    }],
+    gym: [{
+      title: "Weekly Sets",
+      data: [
+        {
+          title: "Biceps",
+          completed: 6,
+          total: 20,
+          percent: 30,
+          completedLabel: "completed",
+          incompletedLabel: "remaining"
+        },
+      ]
+    }],
+    gym: [
+      {
+        title: "Weekly Sets",
+        data: [
+          {
+            title: "Biceps",
+            completed: 6,
+            total: 20,
+            percent: 30,
+            completedLabel: "completed",
+            incompletedLabel: "remaining"
+          },
+        ]
+      },
+      {
+        title: "Weekly Workout",
+        data: [
+          {
+            title: "Biceps",
+            completed: 6,
+            total: 20,
+            percent: 30,
+            completedLabel: "completed",
+            incompletedLabel: "remaining"
+          },
+        ]
+      },
+    ],
+    health: [
+      {
+        title: "Daily Calories",
+        data: [
+          {
+            title: "Thursday",
+            completed: 400,
+            total: 3000,
+            percent: 1,
+            completedLabel: "completed",
+            incompletedLabel: "remaining"
+          },
+        ]
+      },
+    ],
+    games: [
+      {
+        title: "Hours Played",
+        data: [
+          {
+            title: "Wednesday",
+            completed: 6,
+            total: 20,
+            percent: 30,
+            completedLabel: "completed",
+            incompletedLabel: "remaining"
+          },
+        ]
+      },
+      {
+        title: "Games Won",
+        data: [
+          {
+            title: "Wednesday",
+            completed: 2,
+            total: 20,
+            percent: 10,
+            completedLabel: "completed",
+            incompletedLabel: "remaining"
+          },
+        ]
+      },
+    ]
+  }
   const [contentDisplay, updateContent] = useState("school");
-  const [pageData, updatePageData] = useState(null);
+  const [pageData, updatePageData] = useState(data);
   const [requestSent, updateRequestSent] = useState(false);
   const containerStyle = {
     display: "flex",
@@ -12,12 +151,12 @@ function App() {
     justifyContent: "center",
     paddingTop: "3%"
   }
-  if (!requestSent) {
+  /*if (!requestSent) {
     fetch("http://localhost:8080").then(response => response.json()).then(data => {
       updatePageData(data);
       updateRequestSent(true);
     });
-  } 
+  } */
   if (pageData == null) {
     return null;
   } else {
