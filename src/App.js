@@ -17,7 +17,7 @@ function App() {
             incompletedLabel: "missed"
           },
           {
-            title: "DATA S.",
+            title: "DATA STRUCT",
             completed: 9,
             total: 9,
             subtitle: "100%",
@@ -62,6 +62,15 @@ function App() {
         title: "task management",
         data: [
           {
+            title: "Thurs",
+            completed: 0,
+            total: 5,
+            percent: 0,
+            subtitle: "0 tasks",
+            completedLabel: "completed",
+            incompletedLabel: "unfinished"
+          },
+          {
             title: "Fri",
             completed: 0,
             total: 5,
@@ -76,6 +85,15 @@ function App() {
             total: 6,
             percent: 50,
             subtitle: "3 tasks",
+            completedLabel: "completed",
+            incompletedLabel: "unfinished"
+          },
+          {
+            title: "Sun",
+            completed: 0,
+            total: 6,
+            percent: 0,
+            subtitle: "0 tasks",
             completedLabel: "completed",
             incompletedLabel: "unfinished"
           },
@@ -163,10 +181,10 @@ function App() {
         title: "today's calories",
         data: [
           {
-            title: "1000",
-            completed: 1000,
-            total: 3000,
-            subtitle: "kcal",
+            title: "683",
+            completed: 683,
+            total: 2680,
+            subtitle: "Cal",
             completedLabel: "completed",
             incompletedLabel: "remaining"
           },
@@ -179,7 +197,7 @@ function App() {
             title: "fri",
             completed: 2500,
             total: 3000,
-            subtitle: "2500 cal",
+            subtitle: "2500 Cal",
             completedLabel: "completed",
             incompletedLabel: "remaining"
           },
@@ -187,12 +205,13 @@ function App() {
             title: "sat",
             completed: 2500,
             total: 3000,
-            subtitle: "2500 cal",
+            subtitle: "2500 Cal",
             completedLabel: "completed",
             incompletedLabel: "remaining"
           },
         ]
       },
+      //add line chart for weight
     ],
     games: [
       {
@@ -505,8 +524,8 @@ function StatVisual(props) {
     textAlign: "right",
     margin: "0px",
     marginBottom: "0px",
-    color: "#CDCDCD",
-    fontSize: props.title.length < 6 ? "50px" : "30px",
+    color: "rgb(160, 160, 160)",
+    fontSize: props.title.length < 6 ? "30px" : "30px",
   }
   const statSubtitle = {
     textAlign: "right",
