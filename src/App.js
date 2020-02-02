@@ -9,7 +9,7 @@ function App() {
         data: [
           {
             title: "ECON",
-            subtitle: "70%",
+            subtitle: "10%",
             completed: 1,
             total: 6,
             percent: 17,
@@ -62,51 +62,96 @@ function App() {
         title: "task management",
         data: [
           {
-            title: "Thursday",
-            completed: 20,
-            total: 100,
-            percent: 20,
-            completedLabel: "working",
-            incompletedLabel: "other"
+            title: "Fri",
+            completed: 0,
+            total: 5,
+            percent: 0,
+            subtitle: "0 tasks",
+            completedLabel: "completed",
+            incompletedLabel: "unfinished"
+          },
+          {
+            title: "Sat",
+            completed: 3,
+            total: 6,
+            percent: 50,
+            subtitle: "3 tasks",
+            completedLabel: "completed",
+            incompletedLabel: "unfinished"
           },
         ]
       }
     ],
-    gym: [{
-      title: "Weekly Sets",
-      data: [
-        {
-          title: "Biceps",
-          completed: 6,
-          total: 20,
-          percent: 30,
-          completedLabel: "completed",
-          incompletedLabel: "remaining"
-        },
-      ]
-    }],
     gym: [
       {
-        title: "Weekly Sets",
+        title: "recent intensity",
         data: [
           {
-            title: "Biceps",
-            completed: 6,
-            total: 20,
-            percent: 30,
-            completedLabel: "completed",
-            incompletedLabel: "remaining"
+            title: "thurs",
+            completed: 60,
+            total: 100,
+            subtitle: "60%",
+            completedLabel: "% intensity",
+            incompletedLabel: "n/a"
+          },
+          {
+            title: "sat",
+            completed: 55,
+            total: 100,
+            subtitle: "55%",
+            completedLabel: "% intensity",
+            incompletedLabel: "n/a"
           },
         ]
       },
       {
-        title: "Weekly Workout",
+        title: "weekly set progress",
         data: [
           {
-            title: "Biceps",
-            completed: 6,
+            title: "biceps",
+            completed: 7,
             total: 20,
-            percent: 30,
+            subtitle: "14%",
+            completedLabel: "completed",
+            incompletedLabel: "remaining"
+          },
+          {
+            title: "triceps",
+            completed: 4,
+            total: 20,
+            subtitle: "20%",
+            completedLabel: "completed",
+            incompletedLabel: "remaining"
+          },
+          {
+            title: "horiz. back",
+            completed: 5,
+            total: 15,
+            subtitle: "33%",
+            completedLabel: "completed",
+            incompletedLabel: "remaining"
+          },
+          {
+            title: "vert. back",
+            completed: 5,
+            total: 15,
+            subtitle: "33%",
+            completedLabel: "completed",
+            incompletedLabel: "remaining"
+          },
+          {
+            title: "shoulders",
+            completed: 7,
+            total: 20,
+            subtitle: "14%",
+            completedLabel: "completed",
+            incompletedLabel: "remaining"
+          },
+          {
+            title: "core/abs",
+            completed: 7,
+            total: 20,
+            subtitle: "14%",
             completedLabel: "completed",
             incompletedLabel: "remaining"
           },
@@ -115,13 +160,34 @@ function App() {
     ],
     health: [
       {
-        title: "Daily Calories",
+        title: "today's calories",
         data: [
           {
-            title: "Thursday",
-            completed: 400,
+            title: "1000",
+            completed: 1000,
             total: 3000,
-            percent: 1,
+            subtitle: "kcal",
+            completedLabel: "completed",
+            incompletedLabel: "remaining"
+          },
+        ]
+      },
+      {
+        title: "calorie intake",
+        data: [
+          {
+            title: "fri",
+            completed: 2500,
+            total: 3000,
+            subtitle: "2500 cal",
+            completedLabel: "completed",
+            incompletedLabel: "remaining"
+          },
+          {
+            title: "sat",
+            completed: 2500,
+            total: 3000,
+            subtitle: "2500 cal",
             completedLabel: "completed",
             incompletedLabel: "remaining"
           },
@@ -130,40 +196,86 @@ function App() {
     ],
     games: [
       {
-        title: "Hours Played",
+        title: "weekly minutes played",
         data: [
           {
-            title: "Wednesday",
-            completed: 6,
-            total: 20,
-            percent: 30,
-            completedLabel: "completed",
-            incompletedLabel: "remaining"
+            title: "35",
+            subtitle: "minutes",
+            completed: 35,
+            total: 100,
+            completedLabel: "played",
+            incompletedLabel: "n/a"
           },
         ]
       },
       {
-        title: "Games Won",
+        title: "win ratio",
         data: [
           {
-            title: "Wednesday",
+            title: "thurs",
+            subtitle: "2 wins",
             completed: 2,
-            total: 20,
-            percent: 10,
-            completedLabel: "completed",
-            incompletedLabel: "remaining"
+            total: 5,
+            completedLabel: "won",
+            incompletedLabel: "lost"
+          },
+          {
+            title: "sat",
+            subtitle: "1 win",
+            completed: 1,
+            total: 5,
+            completedLabel: "won",
+            incompletedLabel: "lost"
+          },
+        ]
+      },
+      {
+        title: "opponent record",
+        data: [
+          {
+            title: "Arjun",
+            subtitle: "0 wins",
+            completed: 0,
+            total: 5,
+            completedLabel: "won",
+            incompletedLabel: "lost"
+          },
+          {
+            title: "Atharva",
+            subtitle: "1 win",
+            completed: 1,
+            total: 5,
+            completedLabel: "won",
+            incompletedLabel: "lost"
+          },
+          {
+            title: "Sameer",
+            subtitle: "2 wins",
+            completed: 2,
+            total: 5,
+            completedLabel: "won",
+            incompletedLabel: "lost"
           },
         ]
       },
     ]
   }
-  const [contentDisplay, updateContent] = useState("school");
+  var currentUrl = document.URL,
+    urlParts = currentUrl.split('#');
+
+  let loc = (urlParts.length > 1) ? urlParts[1] : "school";
+  const [contentDisplay, updateContent] = useState(loc);
   const [pageData, updatePageData] = useState(data);
   if (pageData == null) {
     return null;
   } else {
     return (
       <div>
+        <style jsx global>{`
+          a {
+            text-decoration: none;
+          }
+        `}</style>
         {<LeftNavBar updateContent={updateContent} />}
         {<ContentContainer pageData={pageData[contentDisplay]} />}
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:700&display=swap" rel="stylesheet" />
@@ -304,13 +416,15 @@ function DreamBubble(props) {
     fontSize: mouseHover ? "25px" : "23px",
     textAlign: "center",
     paddingTop: mouseHover ? "8px" : "10px",
-    transitionDuration: "0.1s"
+    transitionDuration: "0.1s",
+    textDecoration: "none",
+
   }
   return (
     <div onClick={() => props.updateContent(props.title)} onMouseEnter={() => updateMouseHover(true)} onMouseLeave={() => updateMouseHover(false)} style={titleContainer} >
-      <h5 style={labelStyle}>
+      <a href={"#" + props.title}><h5 style={labelStyle}>
         {props.title}
-      </h5 >
+      </h5 ></a>
     </div>
   )
 }
@@ -320,31 +434,30 @@ function ContentContainer(props) {
     minHeight: "90vh",
     marginLeft: "250px"
   }
+  return (
+    <div style={containerWrapperStyle}>
+      {Category(props.pageData)}
+    </div>
+  )
+}
+
+function Category(props) {
   const pageContentStyle = {
     backgroundColor: "white",
     borderRadius: "40px",
     display: "block",
     margin: "0px auto",
     marginTop: "3%",
-    marginBottom: "5%",
+    marginBottom: "40px",
     width: "90%",
     maxWidth: "900px",
     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+    paddingBottom: "3%"
   }
-  return (
-    <div style={containerWrapperStyle}>
-      <div style={pageContentStyle}>
-        {Category(props.pageData)}
-      </div>
-    </div>
-  )
-}
-
-function Category(props) {
   let dataContainers = [];
   props.forEach(dataContainer => {
     dataContainers.push(
-      <div>
+      <div style={pageContentStyle}>
         {DataSet(dataContainer)}
       </div>
     );
@@ -368,14 +481,15 @@ function DataSet(props) {
     paddingTop: "5%",
     paddingLeft: "7%",
     marginTop: "0px",
-    textAlign: "left",
-    fontSize: "50px",
+    textAlign: window.innerWidth > 928 ? "left" : "center",
+    fontSize: window.innerWidth > 928 ? "50px" : "40px",
     marginBottom: "20px"
   }
   let graphs = [];
   props.data.forEach(graphData => {
     graphs.push(StatVisual(graphData));
   });
+  console.log(window.innerWidth);
   return (
     <div>
       <h2 style={titleStyle}>{props.title}</h2>
@@ -390,7 +504,7 @@ function StatVisual(props) {
   const statTitle = {
     textAlign: "right",
     margin: "0px",
-    marginBottom: "10px",
+    marginBottom: "0px",
     color: "#CDCDCD",
     fontSize: props.title.length < 6 ? "50px" : "30px",
   }
@@ -408,6 +522,7 @@ function StatVisual(props) {
     display: "flex",
     minHeight: "160px",
     position: "relative",
+    marginBottom: "0px"
   }
   const titleSection = {
     width: "50%",
