@@ -3,59 +3,75 @@ import { Doughnut } from 'react-chartjs-2';
 
 function App() {
   const data = {
-    school: [{
-      title: "Class Attendance",
-      data: [
-        {
-          title: "Econ Lecture",
-          completed: 1,
-          total: 6,
-          percent: 17,
-          completedLabel: "attended",
-          incompletedLabel: "missed"
-        },
-        {
-          title: "Data Structures Lecture",
-          completed: 9,
-          total: 9,
-          percent: 100,
-          completedLabel: "attended",
-          incompletedLabel: "missed"
-        },
-        {
-          title: "Comp Arch Lecture",
-          completed: 7,
-          total: 9,
-          percent: 78,
-          completedLabel: "attended",
-          incompletedLabel: "missed"
-        },
-        {
-          title: "COM Lecture",
-          completed: 9,
-          total: 9,
-          percent: 100,
-          completedLabel: "attended",
-          incompletedLabel: "missed"
-        },
-        {
-          title: "CP Lecture",
-          completed: 0,
-          total: 3,
-          percent: 0,
-          completedLabel: "attended",
-          incompletedLabel: "missed"
-        },
-        {
-          title: "HONR 399 Lecture",
-          completed: 6,
-          total: 6,
-          percent: 100,
-          completedLabel: "attended",
-          incompletedLabel: "missed"
-        },
-      ]
-    }],
+    school: [
+      {
+        title: "class attendance",
+        data: [
+          {
+            title: "ECON",
+            subtitle: "70%",
+            completed: 1,
+            total: 6,
+            percent: 17,
+            completedLabel: "attended",
+            incompletedLabel: "missed"
+          },
+          {
+            title: "DATA S.",
+            completed: 9,
+            total: 9,
+            subtitle: "100%",
+            completedLabel: "attended",
+            incompletedLabel: "missed"
+          },
+          {
+            title: "COMP ARCH",
+            completed: 7,
+            total: 9,
+            subtitle: "78%",
+            completedLabel: "attended",
+            incompletedLabel: "missed"
+          },
+          {
+            title: "COM",
+            completed: 9,
+            total: 9,
+            subtitle: "100%",
+            completedLabel: "attended",
+            incompletedLabel: "missed"
+          },
+          {
+            title: "CP",
+            completed: 0,
+            total: 3,
+            subtitle: "0%",
+            completedLabel: "attended",
+            incompletedLabel: "missed"
+          },
+          {
+            title: "HONR",
+            completed: 6,
+            total: 6,
+            subtitle: "100%",
+            completedLabel: "attended",
+            incompletedLabel: "missed"
+          },
+        ]
+      },
+      {
+        title: "task management",
+        data: [
+          {
+            title: "Thursday",
+            completed: 20,
+            total: 100,
+            percent: 20,
+            completedLabel: "working",
+            incompletedLabel: "other"
+          },
+        ]
+      }
+    ],
     gym: [{
       title: "Weekly Sets",
       data: [
@@ -143,27 +159,14 @@ function App() {
   }
   const [contentDisplay, updateContent] = useState("school");
   const [pageData, updatePageData] = useState(data);
-  const [requestSent, updateRequestSent] = useState(false);
-  const containerStyle = {
-    display: "flex",
-    width: "100%",
-    position: "relative",
-    justifyContent: "center",
-    paddingTop: "3%"
-  }
-  /*if (!requestSent) {
-    fetch("http://localhost:8080").then(response => response.json()).then(data => {
-      updatePageData(data);
-      updateRequestSent(true);
-    });
-  } */
   if (pageData == null) {
     return null;
   } else {
     return (
-      <div style={containerStyle}>
+      <div>
         {<LeftNavBar updateContent={updateContent} />}
-        {<ContentContainer d  pageData={pageData[contentDisplay]} />}
+        {<ContentContainer pageData={pageData[contentDisplay]} />}
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:700&display=swap" rel="stylesheet" />
       </div>
     );
   }
@@ -171,94 +174,178 @@ function App() {
 
 function LeftNavBar(props) {
   const navStyle = {
-    height: "90vh",
-    width: "20%",
-    backgroundColor: "white",
-    margin: "5%",
-    marginTop: "0px"
+    height: "100vh",
+    width: "250px",
+    backgroundColor: "#362566",
+    marginTop: "0px",
+    top: "0",
+    position: "fixed",
+  };
+  const navContent = {
+    position: "relative",
+    height: "100vh"
   };
   const title = {
-    marginTop: "20px",
+    marginTop: "0px",
     marginBottom: "0px",
     paddingBottom: "0px",
     textAlign: "center",
-    backgroundColor: "white",
+    color: "white",
+    paddingTop: "40px",
+    fontFamily: "'Open Sans', sans-serif"
+  }
+  const navListContainer = {
+    display: "block",
+    margin: "0px auto",
+    marginTop: "40%"
   }
   const iconStyle = {
-    margin: "0px auto",
-    display: "block",
-    width: "50%",
-    marginTop: "20px",
-    marginBottom: "40px",
-    maxWidth: "90px"
+    position: "absolute",
+    width: "50px",
+    bottom: "10px",
+    left: "10px"
   }
   const acronymStyle = {
-    fontSize: "10px",
-    textAlign: "center"
+    fontSize: "13px",
+    textAlign: "left",
+    color: "whitesmoke",
+    fontFamily: "'Open Sans', sans-serif",
+    position: "absolute",
+    bottom: "4px",
+    width: "180px",
+    right: "3px"
   }
   return (
     <div style={navStyle}>
-      <h1 style={title}>DREAM</h1>
-      <p style={acronymStyle}><em>data rules everything around me</em></p>
-      <img style={iconStyle} src="./dream.png" />
-      {DreamBubble({ title: "school", updateContent: props.updateContent })}
-      {DreamBubble({ title: "gym", updateContent: props.updateContent })}
-      {DreamBubble({ title: "health", updateContent: props.updateContent })}
-      {DreamBubble({ title: "games", updateContent: props.updateContent })}
-      {/*DreamBubble({ title: "privacy" })*/}
+      <div style={navContent}>
+        {SpaceGuys()}
+        <h1 style={title}>DREAM</h1>
+        <div style={navListContainer}>
+          {DreamBubble({ title: "school", updateContent: props.updateContent })}
+          {DreamBubble({ title: "gym", updateContent: props.updateContent })}
+          {DreamBubble({ title: "health", updateContent: props.updateContent })}
+          {DreamBubble({ title: "games", updateContent: props.updateContent })}
+          {/*DreamBubble({ title: "privacy" })*/}
+        </div>
+        <img style={iconStyle} src="./dream.png" />
+        <p style={acronymStyle}><em>DATA RULES EVERYTHING AROUND ME</em></p>
+      </div>
+    </div>
+  );
+}
+
+function SpaceGuys() {
+  const styles = {
+    containerWrapper: {
+      position: "absolute",
+      width: "250px",
+      top: "0",
+      height: "100px",
+    },
+    container: {
+      position: "relative",
+      width: "250px",
+      height: "100px",
+    },
+    star1: {
+      width: "20px",
+      position: "absolute",
+      left: "20px",
+      top: "12px"
+    },
+    star2: {
+      width: "20px",
+      position: "absolute",
+      right: "18px",
+      top: "29px"
+    },
+    star3: {
+      width: "20px",
+      position: "absolute",
+      right: "30px",
+      bottom: "10px"
+    },
+    astronaut: {
+      width: "40px",
+      position: "absolute",
+      left: "14px",
+      bottom: "-10px"
+    }
+  }
+  return (
+    <div style={styles.containerWrapper}>
+      <div style={styles.container}>
+        <img src="./star.png" style={styles.star1} />
+        <img src="./star1.png" style={styles.star2} />
+        <img src="./star.png" style={styles.star3} />
+        <img src="./astronaut.png" style={styles.astronaut} />
+      </div>
     </div>
   );
 }
 
 function DreamBubble(props) {
   const [mouseHover, updateMouseHover] = useState(false);
-  let bubbleStyle = {
-    border: "3px solid black",
-    width: "100px",
-    height: "40px",
+  const titleContainer = {
+    backgroundColor: mouseHover ? "rgba(200, 200, 200, 0.2)" : "rgba(200, 200, 200, 0)",
+    width: "80%",
+    height: "50px",
     display: "block",
     margin: "0px auto",
-    marginBottom: "60px",
     cursor: "pointer",
-    backgroundColor: mouseHover ? "#7880FF" : "white",
+    marginBottom: "40px",
+    borderRadius: "10px",
+    transitionDuration: "0.3s"
   }
   const labelStyle = {
-    textAlign: "center",
+    textAlign: "left",
     margin: "12px",
+    color: mouseHover ? "white" : "#CDCDCD",
+    fontSize: mouseHover ? "25px" : "23px",
+    textAlign: "center",
+    paddingTop: mouseHover ? "8px" : "10px",
+    transitionDuration: "0.1s"
   }
   return (
-    <div style={bubbleStyle} onClick={() => props.updateContent(props.title)} onMouseEnter={() => updateMouseHover(true)} onMouseLeave={() => updateMouseHover(false)}>
-      <h5 style={labelStyle}>{props.title}</h5>
+    <div onClick={() => props.updateContent(props.title)} onMouseEnter={() => updateMouseHover(true)} onMouseLeave={() => updateMouseHover(false)} style={titleContainer} >
+      <h5 style={labelStyle}>
+        {props.title}
+      </h5 >
     </div>
   )
 }
 
 function ContentContainer(props) {
   const containerWrapperStyle = {
-    width: "80%",
-    minHeight: "90vh"
+    minHeight: "90vh",
+    marginLeft: "250px"
   }
   const pageContentStyle = {
     backgroundColor: "white",
-    height: "90%",
-    margin: "5%",
-    marginTop: "0px"
+    borderRadius: "40px",
+    display: "block",
+    margin: "0px auto",
+    marginTop: "3%",
+    marginBottom: "5%",
+    width: "90%",
+    maxWidth: "900px",
+    boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
   }
   return (
     <div style={containerWrapperStyle}>
       <div style={pageContentStyle}>
-        {PageContent(props.pageData)}
+        {Category(props.pageData)}
       </div>
     </div>
   )
 }
 
-function PageContent(props) {
+function Category(props) {
   let dataContainers = [];
   props.forEach(dataContainer => {
     dataContainers.push(
       <div>
-        {DataContainer(dataContainer)}
+        {DataSet(dataContainer)}
       </div>
     );
   })
@@ -269,26 +356,25 @@ function PageContent(props) {
   );
 }
 
-function DataContainer(props) {
+function DataSet(props) {
   const graphContainerStyle = {
     display: "flex",
     position: "relative",
     justifyContent: "center",
     maxWidth: "100%",
-    flexWrap: "wrap"
+    flexWrap: "wrap",
   }
   const titleStyle = {
-    paddingTop: "2%",
+    paddingTop: "5%",
+    paddingLeft: "7%",
     marginTop: "0px",
-    textAlign: "center"
+    textAlign: "left",
+    fontSize: "50px",
+    marginBottom: "20px"
   }
   let graphs = [];
   props.data.forEach(graphData => {
-    graphs.push(
-      <div>
-        {DoughnutGraph(graphData)}
-      </div>
-    )
+    graphs.push(StatVisual(graphData));
   });
   return (
     <div>
@@ -300,14 +386,52 @@ function DataContainer(props) {
   );
 }
 
-function DoughnutGraph(props) {
-  const donutTitle = {
-    textAlign: "center",
+function StatVisual(props) {
+  const statTitle = {
+    textAlign: "right",
     margin: "0px",
-    marginBottom: "10px"
+    marginBottom: "10px",
+    color: "#CDCDCD",
+    fontSize: props.title.length < 6 ? "50px" : "30px",
   }
-  const donutContainer = {
-    marginBottom: "50px"
+  const statSubtitle = {
+    textAlign: "right",
+    margin: "0px",
+    marginBottom: "10px",
+    color: "#6466FF",
+    fontSize: "30px"
+  }
+  const itemContainer = {
+    marginBottom: "40px",
+    width: "45%",
+    minWidth: "300px",
+    display: "flex",
+    minHeight: "160px",
+    position: "relative",
+  }
+  const titleSection = {
+    width: "50%",
+    paddingRight: "5%",
+    position: "relative",
+  }
+  const textWrapper = {
+    width: "100%",
+    position: "absolute",
+    right: "0px",
+    top: "50%",
+    transform: "translate(50%, -50%)",
+    right: "50%"
+  }
+  const dataRepresentation = {
+    width: "50%",
+    position: "relative"
+  }
+  const donutWrapper = {
+    top: "50%",
+    position: "absolute",
+    width: "150%",
+    left: "50%",
+    transform: "translate(-50%, -50%)"
   }
   const data = {
     labels: [
@@ -330,24 +454,21 @@ function DoughnutGraph(props) {
     legend: {
       display: false
     },
-    title: {
-      text: props.percent,
-      display: false,
-      position: "bottom"
-    },
-    layout: {
-      padding: {
-        left: 0,
-        right: 0
-      }
-    },
-    responsive: true
   }
   return (
-    <div style={donutContainer}>
-      <h3 style={donutTitle}>{props.title}</h3>
-      <Doughnut data={data} options={options} />
-    </div>
+    <div style={itemContainer}>
+      <div style={titleSection}>
+        <div style={textWrapper}>
+          <h3 style={statTitle}>{props.title}</h3>
+          <h3 style={statSubtitle}>{props.subtitle}</h3>
+        </div>
+      </div >
+      <div style={dataRepresentation}>
+        <div style={donutWrapper}>
+          <Doughnut data={data} options={options} />
+        </div>
+      </div>
+    </div >
   )
 }
 
