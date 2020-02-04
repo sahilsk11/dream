@@ -90,7 +90,7 @@ def update_workouts():
             "averageIntensity": muscle_groups_today[muscle]["averageIntensity"]
         }
     })
-  if len(jsonBody != 0):
+  if len(jsonBody) != 0:
     body = {"records": jsonBody}
     r = requests.patch(
         "https://api.airtable.com/v0/appSD8cnaTlpwJwba/daily-summary?&api_key=" + passwords.api_key, json=body)
