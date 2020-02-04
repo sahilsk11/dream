@@ -76,9 +76,10 @@ def update_workouts():
         "averageIntensity": muscle_groups_week[muscle]["averageIntensity"]
       }
     })
-  body = {"records": jsonBody}
-  r = requests.patch(
-      "https://api.airtable.com/v0/appSD8cnaTlpwJwba/weekly-summary?&api_key=" + passwords.api_key(), json=body)
+  if len(jsonBody) != 0:
+    body = {"records": jsonBody}
+    r = requests.patch(
+        "https://api.airtable.com/v0/appSD8cnaTlpwJwba/weekly-summary?&api_key=" + passwords.api_key(), json=body)
   
   jsonBody = []
   for muscle in muscle_groups_today:
