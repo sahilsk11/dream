@@ -18,31 +18,31 @@ def update_workouts():
   response = r.json()
   muscle_groups_week = {}
   muscle_groups_today = {}
+
   for record in response["records"]:
-    if record["fields"]["date"] == today_date:
-      for muscle in record["fields"]["muscles"]:
-        if muscle not in muscle_groups_today:
+    today = record["fields"]["date"] == today_date
+    for muscle in record["fields"]["muscles"]:
+      if muscle not in muscle_groups_week:
+        muscle_groups_week[muscle] = {}
+        muscle_groups_week[muscle]["sets"] = 1
+        muscle_groups_week[muscle]["intensitySum"] = record["fields"]["intensity"]
+        muscle_groups_week[muscle]["averageIntensity"] = muscle_groups_week[muscle]["intensitySum"]
+        if today:
           muscle_groups_today[muscle] = {}
           muscle_groups_today[muscle]["sets"] = 1
           muscle_groups_today[muscle]["intensitySum"] = record["fields"]["intensity"]
           muscle_groups_today[muscle]["averageIntensity"] = muscle_groups_today[muscle]["intensitySum"]
-        else:
+      else:
+        muscle_groups_week[muscle]["sets"] += 1
+        muscle_groups_week[muscle]["intensitySum"] += record["fields"]["intensity"]
+        muscle_groups_week[muscle]["averageIntensity"] = round(
+            muscle_groups_week[muscle]["intensitySum"] / muscle_groups_week[muscle]["sets"], 2)
+        
+        if today:
           muscle_groups_today[muscle]["sets"] += 1
           muscle_groups_today[muscle]["intensitySum"] += record["fields"]["intensity"]
           muscle_groups_today[muscle]["averageIntensity"] = round(
-              muscle_groups_today[muscle]["intensitySum"] / muscle_groups_today[muscle]["sets"], 2)
-    else:
-      for muscle in record["fields"]["muscles"]:
-        if muscle not in muscle_groups_week:
-          muscle_groups_week[muscle] = {}
-          muscle_groups_week[muscle]["sets"] = 1
-          muscle_groups_week[muscle]["intensitySum"] = record["fields"]["intensity"]
-          muscle_groups_week[muscle]["averageIntensity"] = muscle_groups_week[muscle]["intensitySum"]
-        else:
-          muscle_groups_week[muscle]["sets"] += 1
-          muscle_groups_week[muscle]["intensitySum"] += record["fields"]["intensity"]
-          muscle_groups_week[muscle]["averageIntensity"] = round(
-              muscle_groups_week[muscle]["intensitySum"] / muscle_groups_week[muscle]["sets"], 2)
+            muscle_groups_today[muscle]["intensitySum"] / muscle_groups_today[muscle]["sets"], 2)
           
   jsonBody = []
   daily_id_dict = {
