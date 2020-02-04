@@ -94,7 +94,7 @@ def update_workouts():
   if len(jsonBody) != 0:
     body = {"records": jsonBody}
     r = requests.patch(
-        "https://api.airtable.com/v0/appSD8cnaTlpwJwba/daily-summary?&api_key=" + passwords.api_key, json=body)
+        "https://api.airtable.com/v0/appSD8cnaTlpwJwba/daily-summary?&api_key=" + passwords.api_key(), json=body)
     print(r.text)
   return("done")
 
