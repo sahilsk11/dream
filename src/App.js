@@ -91,7 +91,7 @@ function App() {
           {
             title: "Sun",
             completed: 0,
-            total: 6,
+            total: 7,
             percent: 0,
             subtitle: "0 tasks",
             completedLabel: "completed",

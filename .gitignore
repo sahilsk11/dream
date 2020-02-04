@@ -10,6 +10,7 @@
 
 # production
 /build
+passwords.py
 
 # misc
 .DS_Store
