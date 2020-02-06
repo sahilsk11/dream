@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 
 function App() {
@@ -279,12 +279,25 @@ function App() {
       },
     ]
   }
-  var currentUrl = document.URL,
-    urlParts = currentUrl.split('#');
+  var currentUrl = document.URL, urlParts = currentUrl.split('#');
 
   let loc = (urlParts.length > 1) ? urlParts[1] : "school";
   const [contentDisplay, updateContent] = useState(loc);
   const [pageData, updatePageData] = useState(data);
+  const [displaySideBar, updateSidebarDisplay] = useState(window.innerWidth > 867);
+  useEffect(() => {
+    function handleResize() {
+      updateSidebarDisplay(window.innerWidth > 867)
+    }
+    window.addEventListener('resize', handleResize);
+  });
+  function renderNavigation() {
+    if (displaySideBar) {
+      return <LeftNavBar updateContent={updateContent} />
+    } else {
+      return <NavBar updateContent={updateContent} />
+    }
+  }
   if (pageData == null) {
     return null;
   } else {
@@ -294,19 +307,197 @@ function App() {
           a {
             text-decoration: none;
           }
+          .nav {
+  height: 67px;
+  width: 100%;
+  top: 0px;
+  position: relative;
+}
+            .nav-icon {
+  height: 40px;
+  margin-left: 40px;
+  margin-top: 15px;
+}
+
+.hamburger {
+  padding-top: 10px;
+  width: 25px;
+}
+
+#nav-menu {
+  height: 0px;
+  background-image: linear-gradient(white, #ededed80);
+  width: 100%;
+  transition-duration: 0.5s;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.nav-ul {
+  text-align: center;
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px auto;
+  display: block;
+}
+
+.nav-link {
+  color: whitesmoke;
+  text-decoration: none;
+  font-size: 18px;
+  width: 100%;
+  height: 40px;
+  font-weight: 400;
+  padding-top: 17px;
+  transition-duration: 0.3s;
+  text-align: center;
+  margin: 0px auto;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.062)
+}
+
         `}</style>
-        {<LeftNavBar updateContent={updateContent} />}
-        {<ContentContainer pageData={pageData[contentDisplay]} />}
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:700&display=swap" rel="stylesheet" />
+        {renderNavigation({updateContent})}
+        {<ContentContainer pageData={pageData[contentDisplay]} retainSideBar={displaySideBar} />}
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet" />
       </div>
     );
   }
 }
 
+function NavBar(props) {
+  const [expanded, toggleNav] = useState(false);
+  const title = {
+    marginTop: "0px",
+    marginBottom: "0px",
+    paddingBottom: "0px",
+    paddingTop: "15px",
+    color: "white",
+    fontSize: "25px",
+    fontFamily: "'Open Sans', sans-serif",
+    textAlign: "center",
+  }
+  const navStyle = {
+    minHeight: "67px",
+    width: "100%",
+    backgroundColor: "#362566"
+  }
+  function renderToggle() {
+    const closeNavStyle = {
+      position: "absolute",
+      fontSize: "20px",
+      color: "white",
+      right: "28px",
+      top: "3px",
+      fontWeight: "800",
+      cursor: "pointer"
+    }
+    const hamburgerStyle = {
+      width: "30px",
+      position: "absolute",
+      right: "20px",
+      top: "23px",
+      cursor: "pointer"
+    }
+    const expandedContainer = {
+      display: "block",
+      backgroundColor: "#362566",
+      marginTop: "30px",
+      paddingBottom: "20px",
+    }
+    function closeNav(name) {
+      toggleNav(false);
+      props.updateContent(name);
+    }
+    if (expanded) {
+      return (
+        <div>
+          <p onClick={() => toggleNav(false)} style={closeNavStyle}>✕</p>
+          <div style={expandedContainer}>
+            <ul className="nav-ul">
+              <a href="#school" onClick={() => closeNav("school")}><li className="nav-link">school</li></a>
+              <a href="#gym" onClick={() => closeNav("gym")}><li className="nav-link theme-font">gym</li></a>
+              <a href="#health" onClick={() => closeNav("health")}><li className="nav-link">health</li></a>
+              <a href="#games" onClick={() => closeNav("games")}><li className="nav-link">games</li></a>
+            </ul>
+          </div>
+        </div>
+      );
+    } else {
+      return <img onClick={() => toggleNav(true)} src="./hamburger.png" style={hamburgerStyle} />
+    }
+  }
+  return (
+    <div>
+      <div style={navStyle}>
+        <h1 style={title}>DREAM</h1>
+        {NavBarSpaceGuys()}
+        {renderToggle()}
+      </div>
+    </div>
+  )
+}
+
+function NavBarSpaceGuys() {
+  const styles = {
+    containerWrapper: {
+      position: "absolute",
+      left: "50%",
+      transform: "translateX(-50%)",
+      top: "0",
+      height: "67px",
+      width: "240px",
+      padding: "0px",
+    },
+    container: {
+      position: "relative",
+      height: "67px",
+      width: "240px",
+    },
+    star1: {
+      width: "20px",
+      position: "absolute",
+      right: "40px",
+      top: "8px"
+    },
+    star2: {
+      width: "15px",
+      position: "absolute",
+      left: "40px",
+      top: "8px"
+    },
+    star3: {
+      width: "15px",
+      position: "absolute",
+      right: "30px",
+      bottom: "15px"
+    },
+    astronaut: {
+      width: "30px",
+      position: "absolute",
+      left: "30px",
+      bottom: "5px"
+    }
+  }
+  return (
+    <div style={styles.containerWrapper}>
+      <div style={styles.container}>
+        <img src="./star.png" style={styles.star1} />
+        <img src="./star1.png" style={styles.star2} />
+        <img src="./star1.png" style={styles.star3} />
+        <img src="./astronaut.png" style={styles.astronaut} />
+      </div>
+    </div>
+  );
+}
+
 function LeftNavBar(props) {
   const navStyle = {
     height: "100vh",
-    width: "250px",
+    width: "200px",
     backgroundColor: "#362566",
     marginTop: "0px",
     top: "0",
@@ -322,7 +513,7 @@ function LeftNavBar(props) {
     paddingBottom: "0px",
     textAlign: "center",
     color: "white",
-    paddingTop: "40px",
+    paddingTop: "30px",
     fontFamily: "'Open Sans', sans-serif"
   }
   const navListContainer = {
@@ -332,24 +523,24 @@ function LeftNavBar(props) {
   }
   const iconStyle = {
     position: "absolute",
-    width: "50px",
+    width: "40px",
     bottom: "10px",
     left: "10px"
   }
   const acronymStyle = {
-    fontSize: "13px",
+    fontSize: "10px",
     textAlign: "left",
     color: "whitesmoke",
     fontFamily: "'Open Sans', sans-serif",
     position: "absolute",
-    bottom: "4px",
-    width: "180px",
-    right: "3px"
+    bottom: "7px",
+    width: "130px",
+    left: "58px"
   }
   return (
     <div style={navStyle}>
       <div style={navContent}>
-        {SpaceGuys()}
+        {LeftNavSpaceGuys()}
         <h1 style={title}>DREAM</h1>
         <div style={navListContainer}>
           {DreamBubble({ title: "school", updateContent: props.updateContent })}
@@ -365,7 +556,7 @@ function LeftNavBar(props) {
   );
 }
 
-function SpaceGuys() {
+function LeftNavSpaceGuys() {
   const styles = {
     containerWrapper: {
       position: "absolute",
@@ -375,29 +566,29 @@ function SpaceGuys() {
     },
     container: {
       position: "relative",
-      width: "250px",
+      width: "200px",
       height: "100px",
     },
     star1: {
       width: "20px",
       position: "absolute",
-      left: "20px",
-      top: "12px"
+      left: "10px",
+      top: "8px"
     },
     star2: {
       width: "20px",
       position: "absolute",
-      right: "18px",
-      top: "29px"
+      right: "28px",
+      top: "14px"
     },
     star3: {
       width: "20px",
       position: "absolute",
-      right: "30px",
+      right: "20px",
       bottom: "10px"
     },
     astronaut: {
-      width: "40px",
+      width: "30px",
       position: "absolute",
       left: "14px",
       bottom: "-10px"
@@ -451,7 +642,7 @@ function DreamBubble(props) {
 function ContentContainer(props) {
   const containerWrapperStyle = {
     minHeight: "90vh",
-    marginLeft: "250px"
+    marginLeft: props.retainSideBar ? "200px" : "auto"
   }
   return (
     <div style={containerWrapperStyle}>
