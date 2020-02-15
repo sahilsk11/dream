@@ -18,7 +18,7 @@ def update_workouts():
   response = r.json()
   muscle_groups_week = {}
   muscle_groups_today = {}
-
+  print(response)
   for record in response["records"]:
     today = record["fields"]["date"] == today_date
     for muscle in record["fields"]["muscles"]:
@@ -54,7 +54,8 @@ def update_workouts():
       "calves": "recnmxYiq6bk5k1qm",
       "quads": "recsQdkrUlIhudtoe",
       "chest": "recuBzsFjhb172ZpN",
-      "core": "reczWybrvY3MRJwkn"
+      "core": "reczWybrvY3MRJwkn",
+      "hamstrings": "recxGPObMBZnj21Dj"
   }
   weekly_id_dict = {
       "quads": "rec7dI9nFn3Kb14pR",
@@ -65,7 +66,8 @@ def update_workouts():
       "calves": "recYHZIK96OVUu6jI",
       "vertical back": "recikwLbLy3auvlSX",
       "core": "recsaXSqGoYB5Qdkk",
-      "biceps": "recuakLo1B1WtGwOY"
+      "biceps": "recuakLo1B1WtGwOY",
+      "hamstrings": "recW6xo1SEfS72FkF"
   }
   for muscle in muscle_groups_week:
     jsonBody.append({
