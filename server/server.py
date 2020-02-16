@@ -12,37 +12,39 @@ def test_endpoint():
 
 @app.route("/updateWorkouts")
 def update_workouts():
-  today_date = datetime.datetime.now().strftime("%Y-%m-%d")
   r = requests.get(
       "https://api.airtable.com/v0/appSD8cnaTlpwJwba/exercises?view=all&api_key=" + passwords.api_key())
   response = r.json()
   muscle_groups_week = {}
   muscle_groups_today = {}
-  print(response)
   for record in response["records"]:
-    today = record["fields"]["date"] == today_date
     for muscle in record["fields"]["muscles"]:
       if muscle not in muscle_groups_week:
         muscle_groups_week[muscle] = {}
         muscle_groups_week[muscle]["sets"] = 1
         muscle_groups_week[muscle]["intensitySum"] = record["fields"]["intensity"]
         muscle_groups_week[muscle]["averageIntensity"] = muscle_groups_week[muscle]["intensitySum"]
-        if today:
-          muscle_groups_today[muscle] = {}
-          muscle_groups_today[muscle]["sets"] = 1
-          muscle_groups_today[muscle]["intensitySum"] = record["fields"]["intensity"]
-          muscle_groups_today[muscle]["averageIntensity"] = muscle_groups_today[muscle]["intensitySum"]
       else:
         muscle_groups_week[muscle]["sets"] += 1
         muscle_groups_week[muscle]["intensitySum"] += record["fields"]["intensity"]
         muscle_groups_week[muscle]["averageIntensity"] = round(
             muscle_groups_week[muscle]["intensitySum"] / muscle_groups_week[muscle]["sets"], 2)
         
-        if today:
-          muscle_groups_today[muscle]["sets"] += 1
-          muscle_groups_today[muscle]["intensitySum"] += record["fields"]["intensity"]
-          muscle_groups_today[muscle]["averageIntensity"] = round(
-            muscle_groups_today[muscle]["intensitySum"] / muscle_groups_today[muscle]["sets"], 2)
+  r = requests.get(
+      "https://api.airtable.com/v0/appSD8cnaTlpwJwba/exercises?view=today&api_key=" + passwords.api_key())
+  response = r.json()
+  for record in response["records"]:
+    print('here')
+    for muscle in record["fields"]["muscles"]:
+      if muscle not in muscle_groups_today:
+          muscle_groups_today[muscle] = {}
+          muscle_groups_today[muscle]["sets"] = 1
+          muscle_groups_today[muscle]["intensitySum"] = record["fields"]["intensity"]
+          muscle_groups_today[muscle]["averageIntensity"] = muscle_groups_today[muscle]["intensitySum"]
+      else:
+        muscle_groups_today[muscle]["intensitySum"] += record["fields"]["intensity"]
+        muscle_groups_today[muscle]["sets"] += 1
+        muscle_groups_today[muscle]["averageIntensity"] = round(muscle_groups_today[muscle]["intensitySum"] / muscle_groups_today[muscle]["sets"], 2)
           
   jsonBody = []
   daily_id_dict = {
@@ -97,8 +99,9 @@ def update_workouts():
     body = {"records": jsonBody}
     r = requests.patch(
         "https://api.airtable.com/v0/appSD8cnaTlpwJwba/daily-summary?&api_key=" + passwords.api_key(), json=body)
-    print(r.text)
+    #print(r.text)
   return("done")
 
 if __name__ == "__main__":
-    app.run(debug=False, threaded=False)
+  app.run(debug=False, threaded=False)
+  #update_workouts()
