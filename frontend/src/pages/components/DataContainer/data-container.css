@@ -1,0 +1,49 @@
+.dataset-container {
+  background-color: white;
+  border-radius: 30px;
+  display: block;
+  margin: 0px auto;
+  margin-top: 4%;
+  margin-bottom: 40px;
+  width: 80%;
+  max-width: 900px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  padding-bottom: 3%;
+  min-height: 230px;
+  padding: 4%;
+  padding-top: 30px;
+}
+
+.graphContainerStyle {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  width: 100%;
+  margin: 0px auto;
+  flex-wrap: wrap;
+  padding-top: 40px;
+}
+
+.titleStyle {
+  /* padding-top: 5%;
+  padding-left: 7%; */
+  margin-top: 0px;
+  text-align: left;
+  font-size: 50px;
+  margin-bottom: 0px
+}
+
+.data-container-subtitle {
+  padding: 0px;
+  /* padding-left: 7%; */
+  margin: 0px;
+  margin-top: 4px;
+  color: rgb(182, 182, 182);
+}
+
+@media only screen and (max-width: 928px) {
+  .titleStyle {
+    text-align: center;
+    font-size: 40px;
+  }
+}
