@@ -9,7 +9,7 @@ export default function Gym() {
   const [reloadFlag, updateReloadFlag] = useState(false);
 
   useEffect(() => {
-    const host = "http://localhost:8081";
+    const host = process.env.NODE_ENV === "production" ? "https://dream.sahilkapur.com/server" : "http://localhost:8081";
     const endpoint = "/gym";
     fetch(host + endpoint).then(response => response.json()).then(data => {
       updatePageData(data);
