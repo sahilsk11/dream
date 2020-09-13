@@ -41,7 +41,7 @@ function App() {
     <div>
       <Navbar activePage useSideNav/>
       <div style={containerWrapperStyle}>
-        <Gym />
+        <Gym/>
       </div>
     </div>
   )

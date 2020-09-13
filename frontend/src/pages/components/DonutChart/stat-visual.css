@@ -4,6 +4,7 @@
   margin-bottom: 0px;
   color: rgb(160, 160, 160);
   font-size: 30px;
+  direction: rtl;
 }
 
 .statSubtitle {
@@ -35,7 +36,7 @@
   right: 0px;
   top: 50%;
   transform: translate(50%, -50%);
-  right: 50%
+  right: 50%;
 }
 
 .dataRepresentation {

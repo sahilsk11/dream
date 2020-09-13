@@ -7,11 +7,17 @@ import "./pages.css";
 export default function Gym() {
   const [pageData, updatePageData] = useState(null);
   const [reloadFlag, updateReloadFlag] = useState(false);
-
+  useEffect(() => {
+    const interval = setInterval(() => {
+      updateReloadFlag(reloadFlag => !reloadFlag);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
   useEffect(() => {
     const host = process.env.NODE_ENV === "production" ? "https://dream.sahilkapur.com/server" : "http://localhost:8081";
     const endpoint = "/gym";
     fetch(host + endpoint).then(response => response.json()).then(data => {
+      console.log("fetched");
       updatePageData(data);
     });
   }, [reloadFlag]);
@@ -37,7 +43,6 @@ export default function Gym() {
 
     //construct muscle progress
     pageData.muscleProgress.forEach(muscleEntry => {
-      console.log(muscleEntry);
       let title = muscleEntry.muscle;
       if (title.search("horizontal") >= 0) {
         title = "horiz. back";
@@ -58,7 +63,7 @@ export default function Gym() {
     recentWorkout = [
       StatVisual({
         title: "progress",
-        subtitle: Math.round(Number(pageData.recentProgress)*100).toString()+"%",
+        subtitle: Math.round(Number(pageData.recentProgress) * 100).toString() + "%",
         completedAmount: Math.round(Number(pageData.recentProgress) * 100),
         totalAmount: 100
       }),
