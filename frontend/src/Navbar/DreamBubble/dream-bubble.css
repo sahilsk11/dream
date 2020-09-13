@@ -1,0 +1,32 @@
+.titleContainer {
+  background-color: rgba(200, 200, 200, 0);
+  width: 80%;
+  height: 50px;
+  display: block;
+  margin: 0px auto;
+  cursor: pointer;
+  margin-bottom: 40px;
+  border-radius: 10px;
+  transition-duration: 0.3s
+}
+
+.titleContainer:hover {
+  background-color: rgba(200, 200, 200, 0.2);
+}
+
+.labelStyle {
+  text-align: left;
+  margin: 12px;
+  color: #CDCDCD;
+  font-size: 23px;
+  text-align: center;
+  padding-top: 10px;
+  transition-duration: 0.1s;
+  text-decoration: none;
+}
+
+.titleContainer:hover > .labelStyle {
+  color: white;
+  font-size: 25px;
+  padding-top: 8px;
+}

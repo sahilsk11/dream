@@ -1,0 +1,46 @@
+.statTitle {
+    text-align: "right";
+    margin: "0px";
+    margin-bottom: "0px";
+    color: "rgb(160, 160, 160)";
+    font-size: props.title.length < 6 ? "30px" : "30px";
+  }
+  .statSubtitle {
+    text-align: "right";
+    margin: "0px";
+    margin-bottom: "10px";
+    color: "#6466FF";
+    font-size: "30px"
+  }
+  .itemContainer {
+    margin-bottom: "40px";
+    min-width: "300px";
+    display: "flex";
+    min-height: "160px";
+    position: "relative";
+    margin-bottom: "0px"
+  }
+  .titleSection {
+    width: "30%";
+    padding-right: "5%";
+    position: "relative";
+  }
+  .textWrapper {
+    width: "100%";
+    position: "absolute";
+    right: "0px";
+    top: "50%";
+    transform: "translate(50%, -50%)";
+    right: "50%"
+  }
+  .dataRepresentation {
+    width: "70%";
+    position: "relative"
+  }
+  .donutWrapper {
+    top: "50%";
+    position: "absolute";
+    width: "150%";
+    left: "50%";
+    transform: "translate(-50%, -50%)"
+  }

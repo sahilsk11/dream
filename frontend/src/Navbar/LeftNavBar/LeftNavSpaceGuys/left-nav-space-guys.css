@@ -1,0 +1,35 @@
+.container-wrapper {
+      position: absolute;
+      width: 250px;
+      top: 0;
+      height: 100px;
+    }
+.container {
+      position: relative;
+      width: 200px;
+      height: 100px;
+    }
+.star1 {
+      width: 20px;
+      position: absolute;
+      left: 10px;
+      top: 8px
+    }
+.star2 {
+      width: 20px;
+      position: absolute;
+      right: 28px;
+      top: 14px
+    }
+.star3 {
+      width: 20px;
+      position: absolute;
+      right: 20px;
+      bottom: 10px
+    }
+.astronaut {
+      width: 30px;
+      position: absolute;
+      left: 14px;
+      bottom: -10px
+    }

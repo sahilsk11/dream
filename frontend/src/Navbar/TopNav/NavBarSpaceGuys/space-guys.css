@@ -1,0 +1,38 @@
+.container-wrapper {
+      position: "absolute";
+      left: "50%";
+      transform: "translateX(-50%)";
+      top: "0";
+      height: "67px";
+      width: "240px";
+      padding: "0px";
+    }
+.container {
+      position: "relative";
+      height: "67px";
+      width: "240px";
+    }
+.star1 {
+      width: "20px";
+      position: "absolute";
+      right: "40px";
+      top: "8px"
+    }
+.star2 {
+      width: "15px";
+      position: "absolute";
+      left: "40px";
+      top: "8px"
+    }
+.star3 {
+      width: "15px";
+      position: "absolute";
+      right: "30px";
+      bottom: "15px"
+    }
+.astronaut {
+      width: "30px";
+      position: "absolute";
+      left: "30px";
+      bottom: "5px"
+    }

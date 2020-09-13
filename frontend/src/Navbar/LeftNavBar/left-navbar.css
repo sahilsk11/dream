@@ -1,0 +1,50 @@
+.navStyle {
+  height: 100vh;
+  width: 200px;
+  background-color: #362566;
+  margin-top: 0px;
+  top: 0;
+  position: fixed;
+}
+
+.navContent {
+  position: relative;
+  height: 100vh;
+}
+
+.left-nav-title {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+  text-align: center;
+  color: white;
+  padding-top: 30px;
+  font-family: 'Open Sans', sans-serif;
+  position: absolute;
+  top: 0px;
+  left: 42px;
+}
+
+.navListContainer {
+  display: block;
+  margin: 0px auto;
+  margin-top: 40%
+}
+
+.iconStyle {
+  position: absolute;
+  width: 40px;
+  bottom: 10px;
+  left: 10px
+}
+
+.acronymStyle {
+  font-size: 10px;
+  text-align: left;
+  color: whitesmoke;
+  font-family: 'Open Sans', sans-serif;
+  position: absolute;
+  bottom: 7px;
+  width: 130px;
+  left: 58px
+}
