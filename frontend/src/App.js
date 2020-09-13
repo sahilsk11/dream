@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import Navbar from "./Navbar/Navbar";
-import ContentContainer from "./ContentContainer/ContentContainer";
+import ContentContainer from "./Content/ContentContainer";
 import "./App.css";
 
 function App() {
