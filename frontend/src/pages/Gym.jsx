@@ -59,7 +59,9 @@ export default function Gym({ screenWidth }) {
           title,
           subtitle: Math.round(Number(muscleEntry.progress) * 100).toString() + "%",
           completedAmount: Math.round(Number(muscleEntry.progress) * 100),
-          totalAmount: 100
+          totalAmount: 100,
+          completedLabel: "completed",
+          incompletedLabel: "remaining"
         })
       )
     });
@@ -69,13 +71,17 @@ export default function Gym({ screenWidth }) {
         title: "progress",
         subtitle: Math.round(Number(pageData.recentProgress) * 100).toString() + "%",
         completedAmount: Math.round(Number(pageData.recentProgress) * 100),
-        totalAmount: 100
+        totalAmount: 100,
+        completedLabel: "completed",
+        incompletedLabel: "remaining"
       }),
       StatVisual({
         title: "intensity",
         subtitle: Math.round(Number(pageData.recentIntensity) * 100).toString() + "%",
         completedAmount: Math.round(Number(pageData.recentIntensity) * 100),
-        totalAmount: 100
+        totalAmount: 100,
+        completedLabel: "intensity",
+        incompletedLabel: "remaining intensity"
       })
     ];
     recentWorkoutDate = new Date(pageData.recentWorkoutDate).toLocaleDateString();
