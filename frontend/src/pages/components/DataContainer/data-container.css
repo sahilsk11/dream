@@ -42,8 +42,17 @@
 }
 
 @media only screen and (max-width: 928px) {
+  .dataset-container {
+    padding-top: 20px;
+  }
   .titleStyle {
     text-align: center;
-    font-size: 40px;
+    font-size: 30px;
+    padding-top: 0px;
+    margin-top: 0px;
+  }
+  .data-container-subtitle {
+    text-align: center;
+    font-size: 15px;
   }
 }

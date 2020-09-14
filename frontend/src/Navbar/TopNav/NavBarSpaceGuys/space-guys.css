@@ -1,38 +1,46 @@
-.container-wrapper {
-      position: "absolute";
-      left: "50%";
-      transform: "translateX(-50%)";
-      top: "0";
-      height: "67px";
-      width: "240px";
-      padding: "0px";
-    }
+.space-guys-wrapper {
+  position: absolute;
+  /* left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+  height: 67px;
+  width: 240px;
+  padding: 0px; */
+  top: 0px;
+  height: 67px;
+  width: 200px;
+}
+
 .container {
-      position: "relative";
-      height: "67px";
-      width: "240px";
-    }
-.star1 {
-      width: "20px";
-      position: "absolute";
-      right: "40px";
-      top: "8px"
-    }
-.star2 {
-      width: "15px";
-      position: "absolute";
-      left: "40px";
-      top: "8px"
-    }
-.star3 {
-      width: "15px";
-      position: "absolute";
-      right: "30px";
-      bottom: "15px"
-    }
-.astronaut {
-      width: "30px";
-      position: "absolute";
-      left: "30px";
-      bottom: "5px"
-    }
+  position: relative;
+  height: 67px;
+  width: 240px;
+}
+
+.space-guys-star1 {
+  width: 20px;
+  position: absolute;
+  right: 40px;
+  top: 8px
+}
+
+.space-guys-star2 {
+  width: 15px;
+  position: absolute;
+  left: 10px;
+  top: 8px
+}
+
+.space-guys-star3 {
+  width: 15px;
+  position: absolute;
+  right: 50px;
+  bottom: 40px
+}
+
+.space-guys-astronaut {
+  width: 27px;
+  position: absolute;
+  left: 5px;
+  bottom: 40px
+}

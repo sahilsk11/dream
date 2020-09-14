@@ -29,8 +29,8 @@ export default function TopNav(props) {
   }
   return (
     <div>
-      <div className="navStyle">
-        <h1 className="title">DREAM</h1>
+      <div className="top-nav-style">
+        <h1 className="top-nav-title">DREAM</h1>
         {NavBarSpaceGuys()}
         {renderToggle()}
       </div>
