@@ -16,7 +16,7 @@ function App() {
   const [screenWidth, updateWidth] = useState(window.innerWidth);
   useEffect(() => {
     function handleResize() {
-      updateWidth(window.innerWidth > 867)
+      updateWidth(window.innerWidth)
     }
     window.addEventListener('resize', handleResize);
   }, []);
@@ -29,7 +29,7 @@ function App() {
     <div>
       <Navbar activePage useSideNav={screenWidth > 867}/>
       <div style={containerWrapperStyle}>
-        <Gym/>
+        <Gym screenWidth={screenWidth}/>
       </div>
     </div>
   )

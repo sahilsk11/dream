@@ -34,6 +34,7 @@ export default function Gym({ screenWidth }) {
       if (row.intensity) {
         intensity = (Math.round(Number(row.intensity) * 100)) + "%";
       }
+      console.log(screenWidth);
       if (screenWidth > 482) {
         rows.push([excerise, row.weight, row.reps, intensity, dateStr]);
       } else {
