@@ -4,7 +4,7 @@ import DataContainer from "./components/DataContainer/DataContainer";
 import DataTable from "./components/DataTable/DataTable";
 import "./pages.css";
 
-export default function Gym() {
+export default function Gym({ screenWidth }) {
   const [pageData, updatePageData] = useState(null);
   const [reloadFlag, updateReloadFlag] = useState(false);
   useEffect(() => {
@@ -34,7 +34,11 @@ export default function Gym() {
       if (row.intensity) {
         intensity = (Math.round(Number(row.intensity) * 100)) + "%";
       }
-      rows.push([excerise, row.weight, row.reps, intensity, dateStr])
+      if (screenWidth > 482) {
+        rows.push([excerise, row.weight, row.reps, intensity, dateStr]);
+      } else {
+        rows.push([excerise, intensity, dateStr]);
+      }
     });
 
     //construct weekly progress
@@ -76,6 +80,12 @@ export default function Gym() {
     ];
     recentWorkoutDate = new Date(pageData.recentWorkoutDate).toLocaleDateString();
   }
+  let tableHeader;
+  if (screenWidth > 482) {
+    tableHeader = ["exercise", "weight (lbs)", "reps", "intensity", "date"];
+  } else {
+    tableHeader = ["exercise", "intensity","date"];
+  }
   return (
     <div>
       <DataContainer title="recent workout" subtitle={recentWorkoutDate}>
@@ -91,7 +101,7 @@ export default function Gym() {
       </DataContainer>
 
       <DataContainer title="recent sets">
-        <DataTable header={["exercise", "weight (lbs)", "reps", "intensity", "date"]} rows={rows} />
+        <DataTable header={tableHeader} rows={rows} />
       </DataContainer>
     </div>
   );

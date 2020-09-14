@@ -13,22 +13,21 @@ function App() {
   var currentUrl = document.URL, urlParts = currentUrl.split('#');
   let loc = (urlParts.length > 1) ? urlParts[1] : "gym";
   const [activePage, changePage] = useState(loc);
-  const [useSideNav, updateWidth] = useState(window.innerWidth > 867);
+  const [screenWidth, updateWidth] = useState(window.innerWidth);
   useEffect(() => {
     function handleResize() {
       updateWidth(window.innerWidth > 867)
     }
     window.addEventListener('resize', handleResize);
   }, []);
-  console.log(useSideNav);
 
   const containerWrapperStyle = {
     minHeight: "90vh",
-    marginLeft: useSideNav ? "200px" : "auto"
+    marginLeft: screenWidth > 867 ? "200px" : "auto"
   }
   return (
     <div>
-      <Navbar activePage useSideNav={useSideNav}/>
+      <Navbar activePage useSideNav={screenWidth > 867}/>
       <div style={containerWrapperStyle}>
         <Gym/>
       </div>

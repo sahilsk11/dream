@@ -31,7 +31,7 @@ export default function TopNav(props) {
     <div>
       <div className="top-nav-style">
         <h1 className="top-nav-title">DREAM</h1>
-        {NavBarSpaceGuys()}
+        {/* {NavBarSpaceGuys()} */}
         {renderToggle()}
       </div>
     </div>
