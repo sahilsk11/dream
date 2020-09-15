@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const { DBConnection } = require("./dbHandler");
+const moment = require('moment-timezone');
+
 
 //configure databases
 const dbHandler = new DBConnection(["gym"]);
@@ -31,16 +33,16 @@ app.get("/gym", async (req, res) => {
     recentIntensity,
     ...promiseValues[1],
     recentWorkouts: promiseValues[2],
-    recentWorkoutDate
+    recentWorkoutDate,
+    weekStart: moment().tz('America/Los_Angeles').subtract(4, 'hours').startOf('week').add(1, 'day').format('MM/DD/YYYY')
   })
 });
 
 const getRecentWorkoutData = async (collection) => {
   let d = await getLastDate(collection);
-  d.setHours(0);
-  // this date is still 7AM
+  d = moment(d).tz('America/Los_Angeles').subtract(4, 'hours').startOf('day').utc()._d;
   const result = await query(collection, d);
-  return { ...result, recentWorkoutDate: d};
+  return { ...result, recentWorkoutDate: d };
 }
 
 async function getRecentWorkouts(collection) {
@@ -51,9 +53,8 @@ async function getRecentWorkouts(collection) {
 }
 
 const getWeekProgress = async (collection) => {
-  let d = new Date();
-  d.setDate(d.getDate() - 5);
-  const result = await query(collection, d)
+  const d = moment().tz('America/Los_Angeles').subtract(4, 'hours').startOf('week').add(1, 'day').utc()._d;
+  const result = await query(collection, d);
   return result;
 }
 
@@ -65,9 +66,6 @@ async function query(collection, startDay) {
       $gte: startDay
     },
   }
-  // if (!!scannedMuscle) {
-  //   matchSelector.muscleGroups = [scannedMuscle];
-  // }
 
   const result = await collection.aggregate([
     {
@@ -86,7 +84,16 @@ async function query(collection, startDay) {
       },
     },
   ]).toArray();
-  if (result.length == 0) return {};
+  if (result.length == 0) {
+    const out = {
+      weeklyProgress: 0,
+      avgIntensity: 0,
+    }
+    for (muscle of muscleGroups) {
+      out[muscle+"-progress"] = 0;
+    }
+    return postProcess(out);
+  };
   return postProcess(result[0]);
 }
 
@@ -125,6 +132,6 @@ async function getMuscleGroups() {
 }
 
 async function getLastDate(collection) {
-  const result = await collection.find().sort({"date": -1}).limit(1).toArray();
+  const result = await collection.find().sort({ "date": -1 }).limit(1).toArray();
   return result[0].date;
 }

@@ -23,7 +23,7 @@ export default function Gym({ screenWidth }) {
   }, [reloadFlag]);
   let rows = []
   let weeklyProgress = 0, avgWeeklyIntensity = 0;
-  let muscleProgress = [];
+  let muscleProgress = [], weekStartDate = "";
   let recentWorkout = [], recentWorkoutDate = "";
   if (pageData) {
     //construct table
@@ -66,6 +66,7 @@ export default function Gym({ screenWidth }) {
         })
       )
     });
+    weekStartDate = pageData.weekStart
     //construct recent workout
     recentWorkout = [
       StatVisual({
@@ -101,7 +102,7 @@ export default function Gym({ screenWidth }) {
         </div>
       </DataContainer>
 
-      <DataContainer title="weekly progress" subtitle="week starting 9/7/2020">
+      <DataContainer title="weekly progress" subtitle={"week starting " + weekStartDate}>
         <div className="graphContainerStyle">
           {muscleProgress}
         </div>
