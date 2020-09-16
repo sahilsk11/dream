@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import StatVisual from "../DonutChart/StatVisual";
+import StatVisual from "../DonutChart/DonutChart";
 import "./data-container.css";
 /**
  * 

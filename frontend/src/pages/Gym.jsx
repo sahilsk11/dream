@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import StatVisual from "./components/DonutChart/StatVisual";
+import { StatVisual, MultiDataDonut } from "./components/DonutChart/DonutChart";
 import DataContainer from "./components/DataContainer/DataContainer";
 import DataTable from "./components/DataTable/DataTable";
 import "./pages.css";
@@ -29,7 +29,7 @@ export default function Gym({ screenWidth }) {
     //construct table
     pageData.recentWorkouts.forEach(row => {
       const excerise = row.exercise ? row.exercise : row.muscleGroups[0];
-      let dateStr = new Date(row.date).toLocaleDateString();
+      let dateStr = row.localDate;
       let intensity;
       if (row.intensity) {
         intensity = (Math.round(Number(row.intensity) * 100)) + "%";
@@ -66,9 +66,15 @@ export default function Gym({ screenWidth }) {
         })
       )
     });
-    weekStartDate = pageData.weekStart
+    weekStartDate = pageData.weekStart;
+
     //construct recent workout
     recentWorkout = [
+      // MultiDataDonut({
+      //   title: "progress",
+      //   subtitle: Math.round(Number(pageData.recentProgress) * 100).toString() + "%",
+      //   items: pageData.recentWorkoutData.muscleProgress.map(item => ({ label: item.muscle, amount: Math.round(item.progress * 100) }))
+      // }),
       StatVisual({
         title: "progress",
         subtitle: Math.round(Number(pageData.recentProgress) * 100).toString() + "%",
@@ -84,7 +90,8 @@ export default function Gym({ screenWidth }) {
         totalAmount: 100,
         completedLabel: "intensity",
         incompletedLabel: "remaining intensity"
-      })
+      }),
+      
     ];
     recentWorkoutDate = new Date(pageData.recentWorkoutDate).toLocaleDateString();
   }
@@ -92,7 +99,7 @@ export default function Gym({ screenWidth }) {
   if (screenWidth > 482) {
     tableHeader = ["exercise", "weight (lbs)", "reps", "intensity", "date"];
   } else {
-    tableHeader = ["exercise", "intensity","date"];
+    tableHeader = ["exercise", "intensity", "date"];
   }
   return (
     <div>
@@ -108,7 +115,7 @@ export default function Gym({ screenWidth }) {
         </div>
       </DataContainer>
 
-      <DataContainer title="recent sets">
+      <DataContainer title="recent sets" subtitle="last 15 sets">
         <DataTable header={tableHeader} rows={rows} />
       </DataContainer>
     </div>

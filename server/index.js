@@ -34,7 +34,8 @@ app.get("/gym", async (req, res) => {
     ...promiseValues[1],
     recentWorkouts: promiseValues[2],
     recentWorkoutDate,
-    weekStart: moment().tz('America/Los_Angeles').subtract(4, 'hours').startOf('week').add(1, 'day').format('MM/DD/YYYY')
+    weekStart: moment().tz('America/Los_Angeles').subtract(4, 'hours').startOf('week').add(1, 'day').format('MM/DD/YYYY'),
+    recentWorkoutData: promiseValues[0]
   })
 });
 
