@@ -34,10 +34,20 @@ app.get("/gym", async (req, res) => {
     ...promiseValues[1],
     recentWorkouts: promiseValues[2],
     recentWorkoutDate,
-    weekStart: moment().tz('America/Los_Angeles').subtract(4, 'hours').startOf('week').add(1, 'day').format('MM/DD/YYYY'),
+    weekStart: getWeekStart().format('MM/DD/YYYY'),
     recentWorkoutData: promiseValues[0]
   })
 });
+
+function getWeekStart() {
+  let now = moment().tz('America/Los_Angeles').subtract(4, 'hours');
+  if (now.day() == 0) {
+    now = now.subtract(1, 'day').startOf('week').add(1, 'day');
+  } else {
+    now = now.startOf('week').add(1, 'day');
+  }
+  return now;
+}
 
 const getRecentWorkoutData = async (collection) => {
   let d = await getLastDate(collection);
@@ -54,8 +64,8 @@ async function getRecentWorkouts(collection) {
 }
 
 const getWeekProgress = async (collection) => {
-  const d = moment().tz('America/Los_Angeles').subtract(4, 'hours').startOf('week').add(1, 'day').utc()._d;
-  const result = await query(collection, d);
+  const now = getWeekStart().utc()._d;
+  const result = await query(collection, now);
   return result;
 }
 
