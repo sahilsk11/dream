@@ -51,7 +51,7 @@ function getWeekStart() {
 
 const getRecentWorkoutData = async (collection) => {
   let d = await getLastDate(collection);
-  d = moment(d).tz('America/Los_Angeles').subtract(4, 'hours').startOf('day').utc()._d;
+  d = moment(d).tz('America/Los_Angeles').subtract(4, 'hours').startOf('day').utc().add(4, 'hours')._d;
   const result = await query(collection, d);
   return { ...result, recentWorkoutDate: d };
 }
