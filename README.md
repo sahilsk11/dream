@@ -52,7 +52,7 @@ All `/api/*` routes except `/api/health` require an allowed Access identity or t
 | --- | --- | --- |
 | GET | `/api/health` | `{ ok, name, tz, demo }` — public |
 | GET | `/api/me` | `{ tz, today, example_data }` |
-| GET | `/api/export` | dump sleep + food + weight |
+| GET | `/api/export` | dump sleep + food + weight + scale |
 | POST | `/api/setup/seed` | reload EXAMPLE data (`ALLOW_SEED=true` only) |
 
 ### Sleep
@@ -128,13 +128,19 @@ Without those, a rules parser splits `2 eggs and a banana, 1 cup oats`.
 
 ### Weight
 
+Manual entries and Wyze Scale X readings share the weight view (`source` is `manual` | `scale` | `edited`). Scale readings are trusted — no confirm flow. Weight is stored in kg from the scale and shown in lb.
+
 | Method | Path | Notes |
 | --- | --- | --- |
-| GET | `/api/weight` | newest first |
+| GET | `/api/weight` | newest first; merges manual + scale, scale rows include `metrics` |
 | POST | `/api/weight` | `{ lbs, weighed_at?, notes? }` |
-| PATCH | `/api/weight/:id` | |
-| DELETE | `/api/weight/:id` | |
+| PATCH | `/api/weight/:id` | manual only (scale rows are not edited) |
+| DELETE | `/api/weight/:id` | manual or scale |
 | POST | `/api/ingest/weight` | `{ lbs }` or `{ kg }`, `{ weighed_at, external_id? }` — smart scale, idempotent |
+| GET | `/api/scale` | `{ measurements, latest, previous, sync }` — full body-comp history |
+| POST | `/api/sync/scale` | pull Wyze history now (same Access / bearer auth). First run backfills from 2015-01-01; later runs from last reading − 7 days |
+
+Daily cron: `0 16 * * *` and `0 17 * * *` UTC, with a Worker guard that only runs when `America/New_York` local hour is 12 (EDT vs EST). Tokens live in D1 (`scale_sync_state`); refresh-first, login at most once per run (Wyze rate-limits login). Scale rows are upserted on the scale `data_id`.
 
 ## Deploy to dream.ultron.sh
 
@@ -157,8 +163,13 @@ Do **not** deploy from this PR until you want it live. Account is the same Cloud
    ```bash
    npx wrangler secret put DREAM_API_TOKEN
    npx wrangler secret put USDA_API_KEY          # optional; DEMO_KEY is the default
+   npx wrangler secret put WYZE_EMAIL
+   npx wrangler secret put WYZE_PASSWORD
+   npx wrangler secret put WYZE_KEY_ID
+   npx wrangler secret put WYZE_API_KEY
    # optional:
    npx wrangler secret put LLM_API_KEY
+   npx wrangler secret put WYZE_TOTP_SECRET      # authenticator MFA only
    ```
 5. **Keep production from reseeding**
    `ALLOW_SEED` is `"false"` in `[vars]`. Leave it that way on the Worker.
@@ -198,3 +209,4 @@ On occupancy falling edge, POST the occupied interval to `/api/ingest/sleep`. Ke
 - Sleep sensor data is treated as a **suggestion**: unconfirmed until you confirm or drag/edit.
 - Food recents/favorites are one tap. Barcode uses Open Food Facts. Typed meals go through parse → USDA match → confirm.
 - Weight is a number and a log. Trend line is a sparkline, not a dashboard.
+- Wyze Scale X readings are **trusted** (`source=scale`): no confirm flow. Manual lbs logging still works; the weight view merges both. Body-comp metrics (fat, muscle, water, visceral fat, BMI, BMR, bone, protein, metabolic age) come from the scale and are stored in kg. Display is lb. Tokens live in D1 and are refreshed; login is never retried in a loop.

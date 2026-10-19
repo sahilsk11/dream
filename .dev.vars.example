@@ -9,3 +9,10 @@ USDA_API_KEY=DEMO_KEY
 # LLM_API_KEY=
 # LLM_BASE_URL=https://api.openai.com/v1
 # LLM_MODEL=gpt-4o-mini
+
+# Wyze Scale X (worker secrets in prod — names only here, never commit values)
+# WYZE_EMAIL=
+# WYZE_PASSWORD=
+# WYZE_KEY_ID=
+# WYZE_API_KEY=
+# WYZE_TOTP_SECRET=
