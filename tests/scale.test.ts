@@ -9,8 +9,16 @@ import {
   WYZE_SIGNING_SECRET,
 } from "../worker/wyze.ts";
 import {
+  extractJsonFieldInt,
+  isRoundedJsId,
+  jsPrecisionLostId,
+  parseWyzeJson,
+  quoteUnsafeJsonInts,
+} from "../worker/json_safe.ts";
+import {
   compactId,
   filterRecords,
+  hasRoundedScaleIds,
   isNoonInNewYork,
   macMatches,
   mapScaleRecord,
@@ -180,9 +188,7 @@ function mockD1() {
     state,
     prepare(sql: string) {
       const normalized = sql.replace(/\s+/g, " ").trim();
-      return {
-        bind(...args: unknown[]) {
-          return {
+      const exec = (...args: unknown[]) => ({
             async run() {
               const table = storeFor(normalized);
               if (/INSERT INTO scale_measurements/i.test(normalized)) {
@@ -271,12 +277,77 @@ function mockD1() {
             async all() {
               return { results: [...storeFor(normalized).values()] };
             },
-          };
-        },
+          });
+      return {
+        bind: exec,
+        run: () => exec().run(),
+        first: () => exec().first(),
+        all: () => exec().all(),
       };
     },
   };
 }
+
+describe("19-digit Wyze reading IDs", () => {
+  const trueId = "1234567890123456789";
+  const lostId = String(Number(trueId));
+  const raw = `{"code":1,"data":[{"data_id":${trueId},"id":${trueId},"measure_ts":1700000000000,"weight":80.1,"note":"data_id: ${trueId}"}]}`;
+
+  it("JSON.parse loses precision (the deployed bug)", () => {
+    assert.equal(lostId, "1234567890123456800");
+    assert.notEqual(lostId, trueId);
+    assert.equal(JSON.parse(raw).data[0].data_id, Number(lostId));
+  });
+
+  it("quotes unsafe ints and parses data_id as the exact string", () => {
+    assert.match(quoteUnsafeJsonInts(raw), /"data_id":"1234567890123456789"/);
+    const parsed = parseWyzeJson(raw) as {
+      data: Array<{ data_id: string; id: string; measure_ts: number; note: string }>;
+    };
+    assert.equal(parsed.data[0].data_id, trueId);
+    assert.equal(parsed.data[0].id, trueId);
+    assert.equal(parsed.data[0].measure_ts, 1_700_000_000_000);
+    assert.equal(parsed.data[0].note, `data_id: ${trueId}`);
+    assert.equal(extractJsonFieldInt(raw, "data_id"), trueId);
+    assert.equal(jsPrecisionLostId(trueId), lostId);
+    assert.equal(jsPrecisionLostId(lostId), null);
+    assert.equal(isRoundedJsId(trueId), false);
+    assert.equal(isRoundedJsId(lostId), true);
+    assert.equal(isRoundedJsId("abc"), false);
+    assert.equal(isRoundedJsId("123"), false);
+  });
+
+  it("does not quote 15-digit timestamps or digits already inside strings", () => {
+    const text = `{"measure_ts":1700000000000,"note":"id ${trueId} said \\"${trueId}\\""}`;
+    assert.equal(quoteUnsafeJsonInts(text), text);
+    const parsed = parseWyzeJson(text) as { measure_ts: number; note: string };
+    assert.equal(parsed.measure_ts, 1_700_000_000_000);
+    assert.equal(parsed.note, `id ${trueId} said "${trueId}"`);
+  });
+
+  it("stores the exact id on the row and in raw_json", () => {
+    const parsed = parseWyzeJson(raw) as { data: Array<Record<string, unknown>> };
+    const mapped = mapScaleRecord(parsed.data[0], "America/New_York", "2026-10-19T12:00:00.000Z");
+    assert.equal(mapped?.id, trueId);
+    assert.equal(JSON.parse(mapped?.raw_json || "{}").data_id, trueId);
+    assert.match(mapped?.raw_json || "", /"data_id":"1234567890123456789"/);
+  });
+
+  it("re-keys a precision-lost row on the next upsert without leaving a duplicate", async () => {
+    const db = mockD1();
+    const env = { DB: db } as unknown as Bindings;
+    const parsed = parseWyzeJson(raw) as { data: Array<Record<string, unknown>> };
+    const mapped = mapScaleRecord(parsed.data[0], "America/New_York", "2026-10-19T12:00:00.000Z")!;
+    db.measurements.set(lostId, { ...mapped, id: lostId, raw_json: JSON.stringify({ data_id: Number(trueId) }) });
+    assert.equal(await hasRoundedScaleIds(env), true);
+    await upsertScaleMeasurement(env, mapped);
+    assert.equal(db.measurements.has(lostId), false);
+    assert.equal(db.measurements.size, 1);
+    assert.equal(db.measurements.get(trueId)?.id, trueId);
+    assert.match(String(db.measurements.get(trueId)?.raw_json), /1234567890123456789/);
+    assert.equal(await hasRoundedScaleIds(env), false);
+  });
+});
 
 describe("upsert idempotency", () => {
   it("replaces the same data_id instead of inserting a second row", async () => {

@@ -1,4 +1,5 @@
 import { hmacMd5Hex, md5Hex } from "./md5.ts";
+import { parseWyzeJson } from "./json_safe.ts";
 import { totp } from "./totp.ts";
 
 /** Constants from wyze-sdk 2.2.0 (base.py, api_service.py, pluto_service.py). */
@@ -128,7 +129,7 @@ async function readJson(res: Response): Promise<Json> {
   const text = await res.text();
   if (!text) return {};
   try {
-    return JSON.parse(text) as Json;
+    return parseWyzeJson(text) as Json;
   } catch {
     return { raw: text };
   }
