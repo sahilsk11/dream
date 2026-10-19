@@ -1,0 +1,38 @@
+name = "dream"
+main = "worker/index.ts"
+compatibility_date = "2026-10-18"
+account_id = "0aac5310338965632a15a7a52173813a"
+workers_dev = true
+upload_source_maps = true
+
+# dream.ultron.sh — Workers custom domain. Cloudflare will create DNS on
+# the ultron.sh zone when this is first deployed. If Terraform already
+# owns DNS (same pattern as bs.ultron.sh), add an AAAA 100:: placeholder
+# named "dream" in sahilsk11/cloudflare first, then deploy.
+[[routes]]
+pattern = "dream.ultron.sh"
+custom_domain = true
+zone_name = "ultron.sh"
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = ["/api/*"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "dream"
+# Replace with the real id from `wrangler d1 create dream` before production deploy.
+database_id = "00000000-0000-4000-8000-000000000001"
+migrations_dir = "migrations"
+
+[vars]
+DREAM_TZ = "America/Los_Angeles"
+ALLOW_SEED = "false"
+
+[observability]
+enabled = true
+
+[dev]
+port = 8787

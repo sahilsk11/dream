@@ -1,0 +1,10 @@
+DREAM_PASSCODE=2468
+DREAM_API_TOKEN=dev-token-not-for-prod
+SESSION_SECRET=dev-session-secret-change-me
+ALLOW_SEED=true
+DREAM_TZ=America/Los_Angeles
+USDA_API_KEY=DEMO_KEY
+# Optional. LLM may only parse text into items+quantities — never calories.
+# LLM_API_KEY=
+# LLM_BASE_URL=https://api.openai.com/v1
+# LLM_MODEL=gpt-4o-mini
