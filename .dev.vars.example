@@ -1,8 +1,9 @@
-DREAM_PASSCODE=2468
+# No passcode: in prod Cloudflare Access is the gate. Locally (127.0.0.1 only)
+# the browser is treated as this user.
+DEV_LOCAL_EMAIL=dev@localhost
 DREAM_API_TOKEN=dev-token-not-for-prod
-SESSION_SECRET=dev-session-secret-change-me
 ALLOW_SEED=true
-DREAM_TZ=America/Los_Angeles
+DREAM_TZ=America/New_York
 USDA_API_KEY=DEMO_KEY
 # Optional. LLM may only parse text into items+quantities — never calories.
 # LLM_API_KEY=

@@ -27,8 +27,8 @@ npm run dev
 
 Open `http://127.0.0.1:8787`
 
-- Passcode: `2468` (from `.dev.vars`)
-- Example data loads automatically on first login (`ALLOW_SEED=true`). Rows are tagged **EXAMPLE**.
+- No passcode: locally the browser is admitted as `DEV_LOCAL_EMAIL` (127.0.0.1 only).
+- Example data loads automatically on first request (`ALLOW_SEED=true`). Rows are tagged **EXAMPLE**.
 - API token for curl: `dev-token-not-for-prod`
 
 `npm run dev` builds the UI into `dist/`, applies D1 migrations locally, then starts Wrangler. For UI hot reload in another terminal: `npm run dev:web` (Vite on `:5173`, proxies `/api` to Wrangler).
@@ -37,22 +37,20 @@ Open `http://127.0.0.1:8787`
 
 | Who | How |
 | --- | --- |
-| You, in the browser | Passcode → httpOnly cookie (`POST /api/login`) |
-| homebot / HA / curl | `Authorization: Bearer $DREAM_API_TOKEN` (or `X-Api-Token`) |
+| You, in the browser | Cloudflare Access only. The Worker verifies `Cf-Access-Jwt-Assertion` (team `ACCESS_TEAM_DOMAIN`, app `ACCESS_AUD`) and admits `ACCESS_ALLOWED_EMAILS`. No passcode. |
+| homebot / HA / curl | Access service token headers (`CF-Access-Client-Id` / `CF-Access-Client-Secret`) **plus** `Authorization: Bearer $DREAM_API_TOKEN` (or `X-Api-Token`). Service-token JWTs carry no email, so the bearer is still required. |
 
 ## JSON API
 
 Base URL: `https://dream.ultron.sh` (or `http://127.0.0.1:8787` locally).
 
-All `/api/*` routes except `/api/health` and `/api/login` require cookie or bearer token.
+All `/api/*` routes except `/api/health` require an allowed Access identity or the bearer token.
 
 ### Meta
 
 | Method | Path | Notes |
 | --- | --- | --- |
 | GET | `/api/health` | `{ ok, name, tz, demo }` — public |
-| POST | `/api/login` | `{ "passcode": "…" }` → sets cookie |
-| POST | `/api/logout` | clears cookie |
 | GET | `/api/me` | `{ tz, today, example_data }` |
 | GET | `/api/export` | dump sleep + food + weight |
 | POST | `/api/setup/seed` | reload EXAMPLE data (`ALLOW_SEED=true` only) |
@@ -157,7 +155,6 @@ Do **not** deploy from this PR until you want it live. Account is the same Cloud
    ```
 4. **Secrets** (never commit these)
    ```bash
-   npx wrangler secret put DREAM_PASSCODE
    npx wrangler secret put DREAM_API_TOKEN
    npx wrangler secret put USDA_API_KEY          # optional; DEMO_KEY is the default
    # optional:
@@ -188,9 +185,7 @@ Do **not** deploy from this PR until you want it live. Account is the same Cloud
    }
    ```
    Leave `custom_domain` in this repo's `wrangler.toml` so a deploy does not detach the hostname.
-8. **Access:** `*.ultron.sh` is currently a Sahil-only wildcard. This app is meant to be reachable with **passcode + API token** (homebot, HA). Either:
-   - add an Access **bypass** app for `dream.ultron.sh` (recommended for ingest), or
-   - keep Access and send `CF-Access-Client-Id` / `CF-Access-Client-Secret` plus the bearer token from homebot.
+8. **Access:** Access app `dream` (sahilsk11/cloudflare, `allow_sahil` + service auth, no bypass) is the only browser gate. Agents send the `ultron-agents` service token headers plus the bearer token. If the Access app is recreated, update `ACCESS_AUD` in `wrangler.toml`.
 
 USDA: get a free key at [api.data.gov](https://api.data.gov/signup/) if `DEMO_KEY` rate-limits.
 

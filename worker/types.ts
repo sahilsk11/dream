@@ -1,9 +1,11 @@
 export type Bindings = {
   DB: D1Database;
   ASSETS: Fetcher;
-  DREAM_PASSCODE: string;
   DREAM_API_TOKEN: string;
-  SESSION_SECRET?: string;
+  ACCESS_TEAM_DOMAIN?: string;
+  ACCESS_AUD?: string;
+  ACCESS_ALLOWED_EMAILS?: string;
+  DEV_LOCAL_EMAIL?: string;
   ALLOW_SEED?: string;
   DREAM_TZ?: string;
   USDA_API_KEY?: string;

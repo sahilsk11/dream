@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Moon, Utensils, Weight as WeightIcon, Delete, Check } from "lucide-react";
+import { Moon, Utensils, Weight as WeightIcon } from "lucide-react";
 import { api } from "./api.js";
 import { localDate } from "./time.js";
 import Sleep from "./Sleep.jsx";
@@ -30,10 +30,7 @@ export default function App() {
   const [page, setPage] = useState(hashPage);
   const [me, setMe] = useState(null);
   const [authed, setAuthed] = useState(null);
-  const [pass, setPass] = useState("");
-  const [err, setErr] = useState("");
   const [toast, setToast] = useState("");
-  const [demo, setDemo] = useState(false);
 
   useEffect(() => {
     const onHash = () => setPage(hashPage());
@@ -42,10 +39,6 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/health")
-      .then((r) => r.json())
-      .then((h) => setDemo(!!h.demo))
-      .catch(() => {});
     api
       .me()
       .then((data) => {
@@ -65,27 +58,6 @@ export default function App() {
     setTimeout(() => setToast(""), 1800);
   }
 
-  async function submitPass(next) {
-    const code = next ?? pass;
-    setErr("");
-    try {
-      await api.login(code);
-      const data = await api.me();
-      setMe(data);
-      setAuthed(true);
-      setPass("");
-    } catch {
-      setErr("nope");
-      setPass("");
-    }
-  }
-
-  function onDigit(d) {
-    const next = (pass + d).slice(0, 8);
-    setPass(next);
-    if (next.length >= 4) submitPass(next);
-  }
-
   if (authed === null) {
     return (
       <div className="login">
@@ -95,33 +67,16 @@ export default function App() {
   }
 
   if (!authed) {
+    // Cloudflare Access is the only gate. Getting here means the Access
+    // session is missing or expired; a reload sends the browser back through it.
     return (
       <div className="login">
         <Brand />
         <h1>dream</h1>
         <p className="acronym">DATA RULES EVERYTHING AROUND ME</p>
-        <div className="dots">
-          {[0, 1, 2, 3].map((i) => (
-            <div key={i} className={`dot ${pass.length > i ? "filled" : ""}`} />
-          ))}
-        </div>
-        <div className="pad">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, "⌫", 0, "ok"].map((k) => (
-            <button
-              key={k}
-              aria-label={String(k)}
-              onClick={() => {
-                if (k === "⌫") setPass((p) => p.slice(0, -1));
-                else if (k === "ok") submitPass();
-                else onDigit(String(k));
-              }}
-            >
-              {k === "⌫" ? <Delete size={20} strokeWidth={1.75} /> : k === "ok" ? <Check size={20} strokeWidth={2} /> : k}
-            </button>
-          ))}
-        </div>
-        {err ? <p className="login-hint">{err}</p> : null}
-        {demo ? <p className="login-hint">local example passcode is 2468</p> : null}
+        <button className="primary" onClick={() => window.location.reload()}>
+          sign in again
+        </button>
       </div>
     );
   }

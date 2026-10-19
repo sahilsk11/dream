@@ -23,8 +23,6 @@ async function request(path, opts = {}) {
 
 export const api = {
   me: () => request("/api/me"),
-  login: (passcode) => request("/api/login", { method: "POST", body: { passcode } }),
-  logout: () => request("/api/logout", { method: "POST", body: {} }),
   seed: () => request("/api/setup/seed", { method: "POST", body: {} }),
   sleep: (date) => request(`/api/sleep?date=${encodeURIComponent(date)}`),
   addSleep: (body) => request("/api/sleep", { method: "POST", body }),

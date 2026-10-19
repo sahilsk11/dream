@@ -5,8 +5,6 @@ import {
   corsHeaders,
   isApiToken,
   json,
-  login,
-  logout,
   requireAuth,
 } from "./auth.ts";
 import { localDate, nowIso, tzOf } from "./time.ts";
@@ -68,20 +66,9 @@ app.get("/api/health", (c) =>
   }),
 );
 
-app.post("/api/login", async (c) => {
-  const body = (await c.req.json().catch(() => ({}))) as { passcode?: string };
-  const res = await login(c.env, String(body.passcode ?? ""), c.req.raw);
-  const h = corsHeaders(c.req.raw);
-  const headers = new Headers(res.headers);
-  for (const [k, v] of Object.entries(h)) headers.set(k, v as string);
-  return new Response(res.body, { status: res.status, headers });
-});
-
-app.post("/api/logout", async (c) => logout(c.req.raw, c.env));
-
 app.use("/api/*", async (c, next) => {
   const path = new URL(c.req.url).pathname;
-  if (path === "/api/login" || path === "/api/health" || path === "/api/logout") {
+  if (path === "/api/health") {
     return next();
   }
   const auth = await requireAuth(c.req.raw, c.env);
@@ -101,7 +88,7 @@ app.get("/api/me", async (c) => {
     today: localDate(new Date(), tz),
     example_data: (example?.c ?? 0) > 0,
     allow_seed: c.env.ALLOW_SEED === "true",
-    via: (await isApiToken(c.req.raw, c.env)) ? "token" : "cookie",
+    via: (await isApiToken(c.req.raw, c.env)) ? "token" : "access",
   });
 });
 
