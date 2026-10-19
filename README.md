@@ -59,7 +59,7 @@ All `/api/*` routes except `/api/health` and `/api/login` require cookie or bear
 
 ### Sleep
 
-Sessions are start/end intervals. A day is the **local date of `end_at`** (`DREAM_TZ`, default `America/Los_Angeles`), so overnight sleep and a next-day nap share the wake date. Any number of sessions per day (split nights, naps).
+Sessions are start/end intervals. A day is the **local date of `end_at`** (`DREAM_TZ`, default `America/New_York`), so overnight sleep and a next-day nap share the wake date. Any number of sessions per day (split nights, naps).
 
 | Method | Path | Body / query |
 | --- | --- | --- |

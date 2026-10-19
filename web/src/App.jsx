@@ -126,7 +126,7 @@ export default function App() {
     );
   }
 
-  const tz = me?.tz || "America/Los_Angeles";
+  const tz = me?.tz || "America/New_York";
   const today = me?.today || localDate(new Date(), tz);
 
   return (

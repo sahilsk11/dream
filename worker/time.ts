@@ -1,4 +1,4 @@
-const DEFAULT_TZ = "America/Los_Angeles";
+const DEFAULT_TZ = "America/New_York";
 
 export function tzOf(envTz?: string): string {
   return envTz && envTz.length > 0 ? envTz : DEFAULT_TZ;
