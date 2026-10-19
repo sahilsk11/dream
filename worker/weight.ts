@@ -1,25 +1,32 @@
 import type { Bindings, WeightRow, WeightSource } from "./types.ts";
 import { localDate, nowIso } from "./time.ts";
+import { listScale, scaleAsWeight } from "./scale.ts";
 
 export async function listWeight(
   env: Bindings,
   opts: { from?: string; to?: string; limit?: number } = {},
 ): Promise<WeightRow[]> {
   const limit = opts.limit ?? 90;
+  let manual: WeightRow[];
   if (opts.from && opts.to) {
     const { results } = await env.DB.prepare(
       "SELECT * FROM weight_entries WHERE weighed_at >= ? AND weighed_at <= ? ORDER BY weighed_at DESC",
     )
       .bind(opts.from, opts.to)
       .all<WeightRow>();
-    return results ?? [];
+    manual = results ?? [];
+  } else {
+    const { results } = await env.DB.prepare(
+      "SELECT * FROM weight_entries ORDER BY weighed_at DESC LIMIT ?",
+    )
+      .bind(limit)
+      .all<WeightRow>();
+    manual = results ?? [];
   }
-  const { results } = await env.DB.prepare(
-    "SELECT * FROM weight_entries ORDER BY weighed_at DESC LIMIT ?",
-  )
-    .bind(limit)
-    .all<WeightRow>();
-  return results ?? [];
+  const scale = await listScale(env, { from: opts.from, to: opts.to, limit: opts.limit ?? 500 });
+  const merged = [...manual, ...scale.map(scaleAsWeight)];
+  merged.sort((a, b) => (a.weighed_at < b.weighed_at ? 1 : a.weighed_at > b.weighed_at ? -1 : 0));
+  return merged.slice(0, opts.from && opts.to ? merged.length : limit);
 }
 
 export async function insertWeight(
@@ -78,6 +85,12 @@ export async function updateWeight(
   id: string,
   patch: { lbs?: number; weighed_at?: string; notes?: string | null },
 ): Promise<WeightRow | null> {
+  const scaleHit = await env.DB.prepare("SELECT id FROM scale_measurements WHERE id = ?")
+    .bind(id)
+    .first<{ id: string }>();
+  if (scaleHit) {
+    throw new Error("scale readings are trusted and not edited here");
+  }
   const existing = await env.DB.prepare("SELECT * FROM weight_entries WHERE id = ?")
     .bind(id)
     .first<WeightRow>();
@@ -107,6 +120,10 @@ export async function updateWeight(
 }
 
 export async function deleteWeight(env: Bindings, id: string): Promise<boolean> {
+  const scale = await env.DB.prepare("DELETE FROM scale_measurements WHERE id = ?")
+    .bind(id)
+    .run();
+  if ((scale.meta.changes ?? 0) > 0) return true;
   const res = await env.DB.prepare("DELETE FROM weight_entries WHERE id = ?")
     .bind(id)
     .run();

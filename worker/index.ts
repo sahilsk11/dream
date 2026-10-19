@@ -32,6 +32,14 @@ import {
 } from "./food.ts";
 import { lookupBarcode, parseWithLookup, scaleFood, searchUsda } from "./lookup.ts";
 import { deleteWeight, ingestWeight, insertWeight, listWeight, updateWeight } from "./weight.ts";
+import {
+  getSyncState,
+  listScale,
+  maybeRunNoonScaleSync,
+  publicScale,
+  publicSyncState,
+  runScaleSync,
+} from "./scale.ts";
 import { maybeSeed, seedExample } from "./seed.ts";
 
 type AppEnv = { Bindings: Bindings };
@@ -323,9 +331,13 @@ app.post("/api/weight", async (c) => {
 app.patch("/api/weight/:id", async (c) => {
   const tz = tzOf(c.env.DREAM_TZ);
   const body = (await c.req.json()) as { lbs?: number; weighed_at?: string; notes?: string | null };
-  const row = await updateWeight(c.env, tz, c.req.param("id"), body);
-  if (!row) return json({ error: "not found" }, 404);
-  return json({ entry: row });
+  try {
+    const row = await updateWeight(c.env, tz, c.req.param("id"), body);
+    if (!row) return json({ error: "not found" }, 404);
+    return json({ entry: row });
+  } catch (err) {
+    return json({ error: (err as Error).message }, 400);
+  }
 });
 
 app.delete("/api/weight/:id", async (c) => {
@@ -352,12 +364,35 @@ app.post("/api/ingest/weight", async (c) => {
   return json(result);
 });
 
+app.get("/api/scale", async (c) => {
+  const from = c.req.query("from");
+  const to = c.req.query("to");
+  const [measurements, state] = await Promise.all([
+    listScale(c.env, { from, to, limit: 500 }),
+    getSyncState(c.env),
+  ]);
+  const latest = measurements[0] ? publicScale(measurements[0]) : null;
+  const previous = measurements[1] ? publicScale(measurements[1]) : null;
+  return json({
+    measurements: measurements.map(publicScale),
+    latest,
+    previous,
+    sync: publicSyncState(state),
+  });
+});
+
+app.post("/api/sync/scale", async (c) => {
+  const result = await runScaleSync(c.env);
+  return json(result, result.ok ? 200 : result.error?.includes("not configured") ? 503 : 502);
+});
+
 app.get("/api/export", async (c) => {
   const tz = tzOf(c.env.DREAM_TZ);
-  const [sleep, food, weight] = await Promise.all([
+  const [sleep, food, weight, scale] = await Promise.all([
     listSleep(c.env, {}),
     listFood(c.env, {}),
     listWeight(c.env, { limit: 500 }),
+    listScale(c.env, { limit: 2000 }),
   ]);
   return json({
     tz,
@@ -365,8 +400,11 @@ app.get("/api/export", async (c) => {
     sleep: sleep.map(publicSleep),
     food,
     weight,
+    scale: scale.map(publicScale),
   });
 });
+
+export { app };
 
 export default {
   async fetch(request: Request, env: Bindings, ctx: ExecutionContext) {
@@ -375,5 +413,13 @@ export default {
       return app.fetch(request, env, ctx);
     }
     return env.ASSETS.fetch(request);
+  },
+  async scheduled(controller: ScheduledController, env: Bindings, ctx: ExecutionContext) {
+    ctx.waitUntil(
+      maybeRunNoonScaleSync(env, controller.scheduledTime).then((result) => {
+        if ("skipped" in result) return;
+        if (!result.ok) console.error("scale sync failed", result.error);
+      }),
+    );
   },
 };

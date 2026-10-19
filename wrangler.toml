@@ -38,6 +38,11 @@ ACCESS_TEAM_DOMAIN = "sahilagentserver.cloudflareaccess.com"
 ACCESS_AUD = "00b25b7d166b53ff5cb3f4bb41b7d9e32420023a2d38c96cb0bd6c5d5245b843"
 ACCESS_ALLOWED_EMAILS = "sahilkapur.a@gmail.com"
 
+# 16:00 UTC = noon EDT; 17:00 UTC = noon EST. scheduled() still guards
+# America/New_York local hour === 12 so only one fires on a given day.
+[triggers]
+crons = ["0 16 * * *", "0 17 * * *"]
+
 [observability]
 enabled = true
 

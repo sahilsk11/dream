@@ -46,4 +46,6 @@ export const api = {
   addWeight: (body) => request("/api/weight", { method: "POST", body }),
   patchWeight: (id, body) => request(`/api/weight/${id}`, { method: "PATCH", body }),
   deleteWeight: (id) => request(`/api/weight/${id}`, { method: "DELETE" }),
+  scale: () => request("/api/scale"),
+  syncScale: () => request("/api/sync/scale", { method: "POST", body: {} }),
 };
