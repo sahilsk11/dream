@@ -1,4 +1,5 @@
 import type { Bindings, ScaleRow, ScaleSyncState, WeightRow } from "./types.ts";
+import { isRoundedJsId, jsPrecisionLostId } from "./json_safe.ts";
 import { localDate, nowIso, tzOf, zonedParts } from "./time.ts";
 import {
   SCALE_X_MODEL,
@@ -242,6 +243,21 @@ export async function upsertScaleMeasurement(env: Bindings, row: MappedScale): P
       row.synced_at,
     )
     .run();
+  await dropPrecisionLostTwin(env, row.id);
+}
+
+/**
+ * Rows synced before IDs were parsed as strings used JSON.parse's rounded
+ * Number (often ending 00/000). Next sync upserts the true 19-digit id and
+ * deletes that twin so we do not keep duplicates.
+ */
+export async function dropPrecisionLostTwin(env: Bindings, trueId: string): Promise<boolean> {
+  const lost = jsPrecisionLostId(trueId);
+  if (!lost) return false;
+  const res = await env.DB.prepare("DELETE FROM scale_measurements WHERE id = ?")
+    .bind(lost)
+    .run();
+  return (res.meta.changes ?? 0) > 0;
 }
 
 export async function listScale(env: Bindings, opts: { from?: string; to?: string; limit?: number } = {}): Promise<ScaleRow[]> {
@@ -289,6 +305,11 @@ export function scaleAsWeight(row: ScaleRow): WeightRow & { metrics?: ScaleRow }
 export async function countScale(env: Bindings): Promise<number> {
   const row = await env.DB.prepare("SELECT COUNT(*) AS c FROM scale_measurements").first<{ c: number }>();
   return row?.c ?? 0;
+}
+
+export async function hasRoundedScaleIds(env: Bindings): Promise<boolean> {
+  const { results } = await env.DB.prepare("SELECT id FROM scale_measurements").all<{ id: string }>();
+  return (results ?? []).some((r) => isRoundedJsId(r.id));
 }
 
 export async function latestMeasuredAt(env: Bindings): Promise<string | null> {
@@ -522,7 +543,10 @@ export async function runScaleSync(env: Bindings, now = Date.now()): Promise<Sca
 
   const tz = tzOf(env.DREAM_TZ);
   const existing = await countScale(env);
-  const backfill = existing === 0;
+  // Rounded 16+ digit PKs cannot recover the true Wyze id from D1; refetch
+  // the full history and dropPrecisionLostTwin on each upsert.
+  const rekey = existing > 0 && (await hasRoundedScaleIds(env));
+  const backfill = existing === 0 || rekey;
   const end = new Date(now);
   let start: Date;
   if (backfill) {
