@@ -10,7 +10,7 @@ This is not a general product. There is no AI insights page. The old gym visuali
 
 ## Stack
 
-- **UI:** React + Vite, hand-written CSS in the old DREAM palette (`#362566` purple, `#f2f3fa` ground, `#6466FF` accent, Open Sans, chunky cards, astronaut)
+- **UI:** React + Vite, dark mobile-first CSS. Old DREAM DNA (`#362566` purple, `#6466FF` / `#7c80ff` indigo) used as accents on a near-black base, Inter, lucide icons, no clipart.
 - **API:** Cloudflare Worker (Hono)
 - **DB:** Cloudflare D1 (SQLite)
 - **Food numbers:** USDA FoodData Central search + Open Food Facts barcodes. An LLM, if configured, may only parse a sentence into `{name, quantity, unit}` — never calories.

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight, Scissors, Trash2, X } from "lucide-react";
 import { api } from "./api.js";
 import {
   addDays,
@@ -22,6 +23,17 @@ function isNap(session, tz) {
   return hour >= 10 && hour < 18;
 }
 
+function noteLine(notes) {
+  if (!notes) return "";
+  if (/^EXAMPLE/i.test(notes)) return "";
+  return notes;
+}
+
+function canMerge(a, b) {
+  const gap = Date.parse(b.start_at) - Date.parse(a.end_at);
+  return gap >= 0 && gap <= 90 * 60 * 1000;
+}
+
 export default function Sleep({ tz, today, toast }) {
   const [date, setDate] = useState(today);
   const [sessions, setSessions] = useState([]);
@@ -38,61 +50,80 @@ export default function Sleep({ tz, today, toast }) {
   }, [date]);
 
   const win = dayWindow(date, tz);
+  const total = sessions.reduce((n, s) => n + (s.duration_min || 0), 0);
+  const naps = sessions.filter((s) => isNap(s, tz));
   const unconfirmed = sessions.filter((s) => !s.confirmed);
 
   return (
     <>
-      <div className="card">
-        <div className="row date-nav">
-          <button className="ghost" onClick={() => setDate(addDays(date, -1))} aria-label="previous day">
-            ‹
-          </button>
-          <div>
-            <h2>sleep</h2>
-            <p className="sub">{fmtDay(date, tz)}</p>
+      <div className="hero">
+        <div style={{ width: "100%" }}>
+          <div className="date-nav" style={{ justifyContent: "space-between" }}>
+            <button className="icon-btn" onClick={() => setDate(addDays(date, -1))} aria-label="previous day">
+              <ChevronLeft size={22} strokeWidth={1.75} />
+            </button>
+            <h1>{fmtDay(date, tz)}</h1>
+            <button className="icon-btn" onClick={() => setDate(addDays(date, 1))} aria-label="next day">
+              <ChevronRight size={22} strokeWidth={1.75} />
+            </button>
           </div>
-          <button className="ghost" onClick={() => setDate(addDays(date, 1))} aria-label="next day">
-            ›
-          </button>
-        </div>
-        {date !== today ? (
-          <button className="quiet" onClick={() => setDate(today)}>
-            today
-          </button>
-        ) : null}
-
-        <Timeline sessions={sessions} win={win} tz={tz} onPick={setEditing} />
-        <div className="tl-hours">
-          <span>6pm</span><span>12am</span><span>6am</span><span>12pm</span><span>6pm</span>
-        </div>
-
-        {unconfirmed.length ? (
-          <p className="sub" style={{ marginTop: 12 }}>
-            {unconfirmed.length} unconfirmed sensor session{unconfirmed.length > 1 ? "s" : ""} — tap to confirm or drag times
+          <div className="metric" style={{ textAlign: "center", marginTop: 8 }}>
+            {durationLabel(total) || "0m"}
+          </div>
+          <p className="sub" style={{ textAlign: "center" }}>
+            {sessions.length ? `${sessions.length} session${sessions.length === 1 ? "" : "s"}` : "no sessions"}
+            {naps.length ? ` · ${naps.length} nap${naps.length === 1 ? "" : "s"}` : ""}
+            {unconfirmed.length ? ` · ${unconfirmed.length} to confirm` : ""}
+            {date !== today ? " · " : ""}
+            {date !== today ? (
+              <button className="linkish" onClick={() => setDate(today)}>
+                today
+              </button>
+            ) : null}
           </p>
-        ) : null}
+        </div>
+      </div>
 
-        {sessions.length === 0 ? <p className="sub">no sessions this day</p> : null}
+      <Timeline sessions={sessions} win={win} tz={tz} onPick={setEditing} showNow={date === today} />
+      <div className="tl-hours">
+        <span>6pm</span>
+        <span>12am</span>
+        <span>6am</span>
+        <span>12pm</span>
+        <span>6pm</span>
+      </div>
 
+      <div className="section-label">
+        <span>sessions</span>
+        <button className="linkish" onClick={() => setAdding(true)}>
+          add
+        </button>
+      </div>
+
+      {sessions.length === 0 ? <p className="empty">nothing logged this day</p> : null}
+
+      <div className="list">
         {sessions.map((s, i) => (
-          <div key={s.id} className={`session ${s.confirmed ? "" : "unconfirmed"}`}>
-            <div className="row">
-              <div className="grow">
-                <div className="session-times">
-                  {fmtTime(s.start_at, tz)} – {fmtTime(s.end_at, tz)}
-                </div>
-                <div className="sub">
-                  {durationLabel(s.duration_min)}
-                  {isNap(s, tz) ? " · nap" : ""}
-                  {s.notes ? ` · ${s.notes}` : ""}
-                </div>
+          <div key={s.id} className={`row-item ${s.confirmed ? "" : "pending"}`} onClick={() => setEditing(s)}>
+            <div className="grow">
+              <div className="row-title">
+                {fmtTime(s.start_at, tz)} – {fmtTime(s.end_at, tz)}
               </div>
-              <span className="source-tag">{s.confirmed ? s.source : "unconfirmed"}</span>
+              <div className="row-meta">
+                {isNap(s, tz) ? "nap" : "night"}
+                {noteLine(s.notes) ? ` · ${noteLine(s.notes)}` : ""}
+              </div>
             </div>
-            <div className="actions">
+            <div className="row-right">
+              <div className="dur">{durationLabel(s.duration_min)}</div>
+              <div className={`badge ${s.confirmed ? "" : "warn"} ${isNap(s, tz) ? "nap" : ""}`}>
+                {s.confirmed ? s.source : "review"}
+              </div>
+            </div>
+            <div className="row-actions" onClick={(e) => e.stopPropagation()}>
               {!s.confirmed ? (
                 <button
-                  className="primary"
+                  className="linkish"
                   onClick={async () => {
                     await api.confirmSleep(s.id);
                     toast("confirmed");
@@ -102,29 +133,26 @@ export default function Sleep({ tz, today, toast }) {
                   confirm
                 </button>
               ) : null}
-              <button className="quiet" onClick={() => setEditing(s)}>
-                edit
-              </button>
-              {sessions[i + 1] ? (
+              {sessions[i + 1] && canMerge(s, sessions[i + 1]) ? (
                 <button
-                  className="quiet"
+                  className="linkish"
                   onClick={async () => {
                     await api.mergeSleep(s.id, sessions[i + 1].id);
                     toast("merged");
                     load();
                   }}
                 >
-                  merge next
+                  merge
                 </button>
               ) : null}
             </div>
           </div>
         ))}
-
-        <button className="primary" style={{ width: "100%", marginTop: 12 }} onClick={() => setAdding(true)}>
-          add session
-        </button>
       </div>
+
+      <button className="quiet dashed block" style={{ marginTop: 18 }} onClick={() => setAdding(true)}>
+        add session
+      </button>
 
       {editing ? (
         <Editor
@@ -156,10 +184,17 @@ export default function Sleep({ tz, today, toast }) {
   );
 }
 
-function Timeline({ sessions, win, tz, onPick, activeId, onDrag }) {
+function Timeline({ sessions, win, tz, onPick, activeId, onDrag, showNow }) {
   const span = win.endMs - win.startMs;
+  const nowPct = showNow ? ((Date.now() - win.startMs) / span) * 100 : null;
   return (
     <div className="timeline">
+      <div className="tl-night" />
+      <div className="tl-day" />
+      {[25, 50, 75].map((p) => (
+        <i key={p} className="tl-tick" style={{ position: "absolute", left: `${p}%`, top: 8, bottom: 8, width: 1, background: "rgba(255,255,255,0.06)" }} />
+      ))}
+      {nowPct != null && nowPct >= 0 && nowPct <= 100 ? <div className="tl-now" style={{ left: `${nowPct}%` }} /> : null}
       {sessions.map((s) => {
         const left = ((Date.parse(s.start_at) - win.startMs) / span) * 100;
         const right = ((win.endMs - Date.parse(s.end_at)) / span) * 100;
@@ -221,29 +256,42 @@ function Editor({ tz, session, win, onClose, onSaved }) {
   }
 
   const draft = { ...session, start_at: start, end_at: end };
+  const mins = Math.max(0, Math.round((Date.parse(end) - Date.parse(start)) / 60000));
 
   return (
     <>
       <div className="backdrop" onClick={onClose} />
       <div className="sheet">
-        <h3>edit session</h3>
-        <Timeline sessions={[draft]} win={localWin} tz={tz} activeId={session.id} onDrag={onDrag} />
-        <p className="sub">drag the purple handles (5-min steps), or type times</p>
-        <div className="field">
-          <label>start</label>
-          <input
-            type="datetime-local"
-            value={toDatetimeLocal(start, tz)}
-            onChange={(e) => setStart(fromDatetimeLocal(e.target.value, tz))}
-          />
+        <div className="grabber" />
+        <div className="sheet-head">
+          <div>
+            <h3>{isNap(draft, tz) ? "nap" : "night"}</h3>
+            <p className="lede">drag handles · {durationLabel(mins)}</p>
+          </div>
+          <button className="icon-btn" aria-label="close" onClick={onClose}>
+            <X size={18} strokeWidth={1.75} />
+          </button>
         </div>
-        <div className="field">
-          <label>end</label>
-          <input
-            type="datetime-local"
-            value={toDatetimeLocal(end, tz)}
-            onChange={(e) => setEnd(fromDatetimeLocal(e.target.value, tz))}
-          />
+        <Timeline sessions={[draft]} win={localWin} tz={tz} activeId={session.id} onDrag={onDrag} />
+        <div className="sheet-times">
+          <label className="time-hit">
+            <span>start</span>
+            {fmtTime(start, tz)}
+            <input
+              type="datetime-local"
+              value={toDatetimeLocal(start, tz)}
+              onChange={(e) => setStart(fromDatetimeLocal(e.target.value, tz))}
+            />
+          </label>
+          <label className="time-hit" style={{ textAlign: "right" }}>
+            <span>end</span>
+            {fmtTime(end, tz)}
+            <input
+              type="datetime-local"
+              value={toDatetimeLocal(end, tz)}
+              onChange={(e) => setEnd(fromDatetimeLocal(e.target.value, tz))}
+            />
+          </label>
         </div>
         <div className="field">
           <label>notes</label>
@@ -252,6 +300,7 @@ function Editor({ tz, session, win, onClose, onSaved }) {
         <div className="actions">
           <button
             className="primary"
+            style={{ flex: 1 }}
             onClick={async () => {
               await api.patchSleep(session.id, { start_at: start, end_at: end, notes });
               onSaved("saved");
@@ -267,7 +316,7 @@ function Editor({ tz, session, win, onClose, onSaved }) {
               onSaved("split");
             }}
           >
-            split
+            <Scissors size={16} strokeWidth={1.75} />
           </button>
           <button
             className="danger"
@@ -276,7 +325,7 @@ function Editor({ tz, session, win, onClose, onSaved }) {
               onSaved("deleted");
             }}
           >
-            delete
+            <Trash2 size={16} strokeWidth={1.75} />
           </button>
         </div>
       </div>
@@ -293,7 +342,16 @@ function AddSheet({ tz, date, onClose, onSaved }) {
     <>
       <div className="backdrop" onClick={onClose} />
       <div className="sheet">
-        <h3>add session</h3>
+        <div className="grabber" />
+        <div className="sheet-head">
+          <div>
+            <h3>add session</h3>
+            <p className="lede">overnight, nap, or split night</p>
+          </div>
+          <button className="icon-btn" aria-label="close" onClick={onClose}>
+            <X size={18} strokeWidth={1.75} />
+          </button>
+        </div>
         <div className="field">
           <label>start</label>
           <input
@@ -315,8 +373,7 @@ function AddSheet({ tz, date, onClose, onSaved }) {
           <input value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="nap, split night…" />
         </div>
         <button
-          className="primary"
-          style={{ width: "100%" }}
+          className="primary block"
           onClick={async () => {
             await api.addSleep({ start_at: start, end_at: end, notes });
             onSaved();

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { Minus, Plus, Trash2, X } from "lucide-react";
 import { api } from "./api.js";
 import { fmtDay } from "./time.js";
 
@@ -19,99 +20,119 @@ export default function Weight({ tz, today, toast }) {
   }, []);
 
   const chron = [...entries].reverse();
-  const min = Math.min(...chron.map((e) => e.lbs), lbs);
-  const max = Math.max(...chron.map((e) => e.lbs), lbs);
-  const span = Math.max(1, max - min);
+  const chart = useMemo(() => {
+    if (chron.length < 2) return null;
+    const min = Math.min(...chron.map((e) => e.lbs));
+    const max = Math.max(...chron.map((e) => e.lbs));
+    const span = Math.max(0.6, max - min);
+    const pad = 0.15 * span;
+    const lo = min - pad;
+    const hi = max + pad;
+    const w = 300;
+    const h = 96;
+    const pts = chron.map((e, i) => {
+      const x = 10 + (i / (chron.length - 1)) * (w - 20);
+      const y = 10 + (1 - (e.lbs - lo) / (hi - lo)) * (h - 24);
+      return { x, y, lbs: e.lbs };
+    });
+    const line = pts.map((p) => `${p.x},${p.y}`).join(" ");
+    const area = `${pts[0].x},${h} ${line} ${pts[pts.length - 1].x},${h}`;
+    return { pts, line, area, last: pts[pts.length - 1], first: pts[0] };
+  }, [entries]);
+
+  void today;
 
   return (
     <>
-      <div className="card">
-        <h2>weight</h2>
-        <p className="sub">one tap · lbs</p>
-        <div className="weight-big">{lbs.toFixed(1)}</div>
-        <div className="row" style={{ justifyContent: "center", gap: 12 }}>
-          <div className="qty">
-            <button type="button" onClick={() => setLbs(Math.round((lbs - 0.2) * 10) / 10)}>
-              –
-            </button>
-            <input
-              inputMode="decimal"
-              value={lbs}
-              onChange={(e) => setLbs(Number(e.target.value) || 0)}
-            />
-            <button type="button" onClick={() => setLbs(Math.round((lbs + 0.2) * 10) / 10)}>
-              +
-            </button>
-          </div>
+      <div className="weight-big" style={{ marginTop: 12 }}>{lbs.toFixed(1)}</div>
+      <div className="weight-unit">pounds</div>
+
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div className="qty">
+          <button type="button" aria-label="decrease" onClick={() => setLbs(Math.round((lbs - 0.2) * 10) / 10)}>
+            <Minus size={16} strokeWidth={2} />
+          </button>
+          <input
+            inputMode="decimal"
+            value={lbs}
+            onChange={(e) => setLbs(Number(e.target.value) || 0)}
+          />
+          <button type="button" aria-label="increase" onClick={() => setLbs(Math.round((lbs + 0.2) * 10) / 10)}>
+            <Plus size={16} strokeWidth={2} />
+          </button>
         </div>
-        {chron.length > 1 ? (
-          <svg className="trend" viewBox="0 0 300 72" preserveAspectRatio="none">
-            <polyline
-              fill="none"
-              stroke="#6466FF"
-              strokeWidth="3"
-              points={chron
-                .map((e, i) => {
-                  const x = (i / (chron.length - 1)) * 300;
-                  const y = 64 - ((e.lbs - min) / span) * 52;
-                  return `${x},${y}`;
-                })
-                .join(" ")}
-            />
-          </svg>
-        ) : null}
-        <button
-          className="primary"
-          style={{ width: "100%" }}
-          onClick={async () => {
-            await api.addWeight({ lbs });
-            toast(`logged ${lbs.toFixed(1)} lbs`);
-            load();
-          }}
-        >
-          log {lbs.toFixed(1)} lbs
-        </button>
       </div>
 
-      <div className="card">
-        <h2>log</h2>
-        <p className="sub">edit / delete</p>
+      {chart ? (
+        <svg className="trend" viewBox="0 0 300 96" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="wfill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#7c80ff" stopOpacity="0.32" />
+              <stop offset="100%" stopColor="#7c80ff" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <polygon points={chart.area} fill="url(#wfill)" />
+          <polyline points={chart.line} fill="none" stroke="#8b8eff" strokeWidth="2.2" strokeLinejoin="round" strokeLinecap="round" />
+          <circle cx={chart.last.x} cy={chart.last.y} r="4.2" fill="#f2f0f8" stroke="#7c80ff" strokeWidth="2" />
+        </svg>
+      ) : null}
+
+      <button
+        className="primary block"
+        onClick={async () => {
+          await api.addWeight({ lbs });
+          toast(`logged ${lbs.toFixed(1)} lbs`);
+          load();
+        }}
+      >
+        log {lbs.toFixed(1)} lbs
+      </button>
+
+      <div className="section-label">log</div>
+      <div className="list">
         {entries.map((e) => (
-          <div key={e.id} className="session">
-            <div className="row">
-              <div className="grow">
-                <div className="session-times">{e.lbs.toFixed(1)} lbs</div>
-                <div className="sub">
-                  {fmtDay(e.local_date, tz)}
-                  {e.is_example ? " · EXAMPLE" : ""}
-                </div>
+          <div key={e.id} className="row-item" onClick={() => setEditing(e)}>
+            <div className="grow">
+              <div className="row-title">{e.lbs.toFixed(1)} lbs</div>
+              <div className="row-meta">
+                {fmtDay(e.local_date, tz)}
+                {e.is_example ? " · example" : ""}
               </div>
-              <span className="source-tag">{e.source}</span>
             </div>
-            <div className="actions">
-              <button className="quiet" onClick={() => setEditing(e)}>
-                edit
-              </button>
+            <div className="source-tag">{e.source}</div>
+            <div className="row-actions" onClick={(ev) => ev.stopPropagation()}>
               <button
-                className="danger"
+                className="ghost-btn danger"
+                aria-label="delete"
                 onClick={async () => {
                   await api.deleteWeight(e.id);
                   toast("deleted");
                   load();
                 }}
               >
-                delete
+                <Trash2 size={16} strokeWidth={1.75} />
               </button>
             </div>
           </div>
         ))}
       </div>
 
+      <div className="tail" aria-hidden="true" />
+
       {editing ? (
         <>
           <div className="backdrop" onClick={() => setEditing(null)} />
           <div className="sheet">
-            <h3>edit weight</h3>
+            <div className="grabber" />
+            <div className="sheet-head">
+              <div>
+                <h3>edit weight</h3>
+                <p className="lede">{fmtDay(editing.local_date, tz)}</p>
+              </div>
+              <button className="icon-btn" aria-label="close" onClick={() => setEditing(null)}>
+                <X size={18} strokeWidth={1.75} />
+              </button>
+            </div>
             <div className="field">
               <label>lbs</label>
               <input
@@ -121,8 +142,7 @@ export default function Weight({ tz, today, toast }) {
               />
             </div>
             <button
-              className="primary"
-              style={{ width: "100%" }}
+              className="primary block"
               onClick={async () => {
                 await api.patchWeight(editing.id, { lbs: editing.lbs });
                 setEditing(null);

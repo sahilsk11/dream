@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Moon, Utensils, Weight as WeightIcon, Delete, Check } from "lucide-react";
 import { api } from "./api.js";
 import { localDate } from "./time.js";
 import Sleep from "./Sleep.jsx";
@@ -6,14 +7,23 @@ import Food from "./Food.jsx";
 import Weight from "./Weight.jsx";
 
 const TABS = [
-  { id: "sleep", label: "sleep" },
-  { id: "food", label: "food" },
-  { id: "weight", label: "weight" },
+  { id: "sleep", label: "sleep", Icon: Moon },
+  { id: "food", label: "food", Icon: Utensils },
+  { id: "weight", label: "weight", Icon: WeightIcon },
 ];
 
 function hashPage() {
   const h = (window.location.hash || "#sleep").replace("#", "");
   return TABS.some((t) => t.id === h) ? h : "sleep";
+}
+
+function Brand() {
+  return (
+    <div className="brand">
+      <span className="brand-mark" />
+      <span className="brand-word">dream</span>
+    </div>
+  );
 }
 
 export default function App() {
@@ -79,8 +89,7 @@ export default function App() {
   if (authed === null) {
     return (
       <div className="login">
-        <img src="/dream.png" width="64" alt="" />
-        <h1>DREAM</h1>
+        <Brand />
       </div>
     );
   }
@@ -88,8 +97,8 @@ export default function App() {
   if (!authed) {
     return (
       <div className="login">
-        <img src="/astronaut.png" width="72" alt="" />
-        <h1>DREAM</h1>
+        <Brand />
+        <h1>dream</h1>
         <p className="acronym">DATA RULES EVERYTHING AROUND ME</p>
         <div className="dots">
           {[0, 1, 2, 3].map((i) => (
@@ -100,13 +109,14 @@ export default function App() {
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, "⌫", 0, "ok"].map((k) => (
             <button
               key={k}
+              aria-label={String(k)}
               onClick={() => {
                 if (k === "⌫") setPass((p) => p.slice(0, -1));
                 else if (k === "ok") submitPass();
                 else onDigit(String(k));
               }}
             >
-              {k}
+              {k === "⌫" ? <Delete size={20} strokeWidth={1.75} /> : k === "ok" ? <Check size={20} strokeWidth={2} /> : k}
             </button>
           ))}
         </div>
@@ -122,41 +132,22 @@ export default function App() {
   return (
     <div className="app">
       <aside className="side-rail">
-        <div className="side-inner">
-          <div className="space-guys" style={{ margin: "0 auto 8px", width: 120, height: 70 }}>
-            <img src="/star.png" className="star-a" alt="" />
-            <img src="/star1.png" className="star-b" alt="" />
-            <img src="/star.png" className="star-c" alt="" />
-            <img src="/astronaut.png" className="astro" alt="" />
-          </div>
-          <h1 className="side-title">DREAM</h1>
-          <div className="side-links">
-            {TABS.map((t) => (
-              <button key={t.id} className={page === t.id ? "on" : ""} onClick={() => go(t.id)}>
-                {t.label}
-              </button>
-            ))}
-          </div>
-          <div className="side-foot">
-            <img src="/dream.png" width="36" alt="" />
-            <p>DATA RULES EVERYTHING AROUND ME</p>
-          </div>
+        <Brand />
+        <div className="side-links">
+          {TABS.map((t) => (
+            <button key={t.id} className={page === t.id ? "on" : ""} onClick={() => go(t.id)}>
+              <t.Icon size={18} strokeWidth={1.75} />
+              {t.label}
+            </button>
+          ))}
         </div>
+        <p className="side-foot">DATA RULES EVERYTHING AROUND ME</p>
       </aside>
 
       <header className="topbar">
-        <img src="/dream.png" className="chip-logo" alt="" />
-        <h1 className="topbar-title">DREAM</h1>
-        <div className="space-guys">
-          <img src="/star.png" className="star-a" alt="" />
-          <img src="/star1.png" className="star-b" alt="" />
-          <img src="/astronaut.png" className="astro" alt="" />
-        </div>
+        <Brand />
+        {me?.example_data ? <span className="example-pill">example</span> : null}
       </header>
-
-      {me?.example_data ? (
-        <div className="example-banner">EXAMPLE DATA — labeled sample, not live sensor/food logs</div>
-      ) : null}
 
       <main className="page">
         {page === "sleep" ? <Sleep tz={tz} today={today} toast={showToast} /> : null}
@@ -167,6 +158,7 @@ export default function App() {
       <nav className="bottom-nav">
         {TABS.map((t) => (
           <button key={t.id} className={page === t.id ? "on" : ""} onClick={() => go(t.id)}>
+            <t.Icon size={22} strokeWidth={page === t.id ? 2.1 : 1.7} />
             {t.label}
           </button>
         ))}
