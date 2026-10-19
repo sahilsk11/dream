@@ -244,6 +244,7 @@ export type IngestDecision =
 export function decideSleepIngest(
   existing: SleepRow[],
   interval: IngestInterval,
+  claimed?: Set<string>,
 ): IngestDecision {
   const ext = interval.external_id;
   if (ext) {
@@ -275,6 +276,23 @@ export function decideSleepIngest(
   if (same) {
     return { action: "skip", reason: "duplicate_times", id: same.id, interval };
   }
+  // Same sleep already stored as an unconfirmed sensor row under another id
+  // (e.g. a manual backfill, or a start that drifted across a 5-min bucket):
+  // reconcile into that row instead of inserting a duplicate.
+  let best: { row: SleepRow; ov: number } | null = null;
+  for (const row of existing) {
+    if (row.source !== "sensor" || row.confirmed) continue;
+    if (claimed?.has(row.id)) continue;
+    const ov = overlapMs(row.start_at, row.end_at, interval.start, interval.end);
+    const rowDur = Math.max(1, Date.parse(row.end_at) - Date.parse(row.start_at));
+    if (ov / Math.min(sensorDur, rowDur) >= 0.5 && (!best || ov > best.ov)) best = { row, ov };
+  }
+  if (best) {
+    if (best.row.start_at === interval.start && best.row.end_at === interval.end) {
+      return { action: "skip", reason: "unchanged", id: best.row.id, interval };
+    }
+    return { action: "update", id: best.row.id, interval };
+  }
   return { action: "insert", interval };
 }
 
@@ -291,6 +309,7 @@ export async function ingestSleep(
   let updated = 0;
   let skipped = 0;
   const decisions: IngestDecision[] = [];
+  const claimed = new Set<string>();
   for (const raw of intervals) {
     const interval: IngestInterval = {
       start: new Date(raw.start).toISOString(),
@@ -303,8 +322,9 @@ export async function ingestSleep(
       decisions.push({ action: "skip", reason: "bad_range", interval });
       continue;
     }
-    const decision = decideSleepIngest(existing, interval);
+    const decision = decideSleepIngest(existing, interval, claimed);
     decisions.push(decision);
+    if ("id" in decision && decision.id) claimed.add(decision.id);
     if (decision.action === "skip") {
       skipped += 1;
       continue;
@@ -314,7 +334,7 @@ export async function ingestSleep(
       const inProgress = interval.in_progress ? 1 : 0;
       await env.DB.prepare(
         `UPDATE sleep_sessions
-         SET start_at = ?, end_at = ?, local_date = ?, in_progress = ?, updated_at = ?
+         SET start_at = ?, end_at = ?, local_date = ?, in_progress = ?, updated_at = ?, external_id = ?
          WHERE id = ? AND source = 'sensor' AND confirmed = 0`,
       )
         .bind(
@@ -323,6 +343,7 @@ export async function ingestSleep(
           sleepDay(interval.end, tz),
           inProgress,
           now,
+          interval.external_id ?? null,
           decision.id,
         )
         .run();
@@ -335,6 +356,7 @@ export async function ingestSleep(
           end_at: interval.end,
           local_date: sleepDay(interval.end, tz),
           in_progress: inProgress,
+          external_id: interval.external_id ?? existing[idx].external_id,
         };
       }
       continue;

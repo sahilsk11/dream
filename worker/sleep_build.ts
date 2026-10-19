@@ -14,8 +14,17 @@ import { snapMinutes } from "./time.ts";
 export const DEFAULT_PRESSURE_THRESHOLD = 330;
 export const DEFAULT_LOOKBACK_HOURS = 36;
 export const MIN_SESSION_MS = 20 * 60_000;
-/** Occupancy shorter than this does not end a session (bathroom blip). */
+export const MIN_CLOSED_SPIKES = 2;
+/**
+ * The Zigbee motion sensors only hold "on" for ~30–60s per trigger, so a single
+ * continuous "on" run almost never lasts minutes even when he is walking around.
+ * Sustained motion = triggers (any outside-bedroom sensor) chained with gaps of
+ * at most MOTION_CLUSTER_GAP_MS, spanning at least MOTION_PERSIST_MS and with at
+ * least MOTION_MIN_TRIGGERS rising edges. A lone bathroom blip does not qualify.
+ */
 export const MOTION_PERSIST_MS = 3 * 60_000;
+export const MOTION_CLUSTER_GAP_MS = 10 * 60_000;
+export const MOTION_MIN_TRIGGERS = 3;
 
 export type SleepInterval = {
   start: number;
@@ -80,14 +89,11 @@ export function buildSleepSessions(history: HaState[][], opts: BuildSleepOpts): 
     risingEdges(byId.get(RIGHT_PRESSURE), threshold, startMs),
   ]).filter((t) => t > startMs && t < endMs && isHome(stateAt(byId.get(PERSON_SAHIL), t)));
 
-  const motion = booleanRuns(times, (t) => {
-    return (
-      isMotionOn(stateAt(byId.get(LIVING_MOTION), t)) ||
-      isMotionOn(stateAt(byId.get(KITCHEN_MOTION), t)) ||
-      isMotionOn(stateAt(byId.get(BATHROOM_MOTION), t))
-    );
-  });
-  const persistentMotion = motion.filter((m) => m.end - m.start >= MOTION_PERSIST_MS);
+  // One run per sensor trigger (not OR-ed), so the cluster counts real triggers.
+  const motion = [LIVING_MOTION, KITCHEN_MOTION, BATHROOM_MOTION].flatMap((id) =>
+    booleanRuns(times, (t) => isMotionOn(stateAt(byId.get(id), t))),
+  );
+  const persistentMotion = sustainedMotion(motion);
   const away = booleanRuns(times, (t) => !isHome(stateAt(byId.get(PERSON_SAHIL), t)));
   const blockers = mergeIntervals([...persistentMotion, ...away]);
   const quiet = gaps(blockers, startMs, endMs);
@@ -97,19 +103,16 @@ export function buildSleepSessions(history: HaState[][], opts: BuildSleepOpts): 
     if (gap.end - gap.start < MIN_SESSION_MS) continue;
     const inGap = spikes.filter((t) => t > gap.start && t < gap.end);
     if (!inGap.length) continue;
+    // Starts at the first pressure spike after the last sustained outside motion;
+    // holds through empty (~296) and stuck-high pressure; ends where sustained
+    // outside motion (or the phone leaving) begins. Open at the window end = in progress.
     const start = inGap[0];
-    const lastSpike = inGap[inGap.length - 1];
     const open = gap.end === endMs;
-    let end: number;
-    let inProgress = false;
-    if (open) {
-      inProgress = true;
-      end = endMs;
-    } else if (lastSpike > start) {
-      end = lastSpike;
-    } else {
-      end = gap.end;
-    }
+    const end = open ? endMs : gap.end;
+    const inProgress = open;
+    // A closed session needs at least two spikes (getting in + moving/getting up);
+    // one lone spike then stillness is usually a sit on the bed, not sleep.
+    if (!open && inGap.length < MIN_CLOSED_SPIKES) continue;
     if (end - start < MIN_SESSION_MS) continue;
     const startIso = new Date(start).toISOString();
     out.push({
@@ -138,6 +141,30 @@ export function risingEdges(states: HaState[] | undefined, threshold: number, st
     if (high && !prevHigh) out.push(t);
     if (s.state !== "unavailable" && s.state !== "unknown") prevHigh = high;
   }
+  return out;
+}
+
+/** Chain motion "on" runs into clusters; keep only sustained ones (see MOTION_*). */
+export function sustainedMotion(runs: SleepInterval[]): SleepInterval[] {
+  const sorted = [...runs].sort((a, b) => a.start - b.start);
+  const out: SleepInterval[] = [];
+  let cur: { start: number; end: number; n: number; long: boolean } | null = null;
+  const flush = () => {
+    if (cur && cur.end - cur.start >= MOTION_PERSIST_MS && (cur.n >= MOTION_MIN_TRIGGERS || cur.long)) {
+      out.push({ start: cur.start, end: cur.end });
+    }
+  };
+  for (const r of sorted) {
+    if (cur && r.start - cur.end <= MOTION_CLUSTER_GAP_MS) {
+      cur.end = Math.max(cur.end, r.end);
+      cur.n += 1;
+      cur.long = cur.long || r.end - r.start >= MOTION_PERSIST_MS;
+    } else {
+      flush();
+      cur = { start: r.start, end: r.end, n: 1, long: r.end - r.start >= MOTION_PERSIST_MS };
+    }
+  }
+  flush();
   return out;
 }
 

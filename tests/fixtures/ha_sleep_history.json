@@ -43,7 +43,7 @@
       { "entity_id": "binary_sensor.living_room_motion_occupancy", "state": "off", "last_changed": "2026-10-18T19:10:00.000Z" },
       { "entity_id": "binary_sensor.living_room_motion_occupancy", "state": "on", "last_changed": "2026-10-19T06:00:00.000Z" },
       { "entity_id": "binary_sensor.living_room_motion_occupancy", "state": "off", "last_changed": "2026-10-19T07:45:00.000Z" },
-      { "entity_id": "binary_sensor.living_room_motion_occupancy", "state": "on", "last_changed": "2026-10-19T14:50:00.000Z" },
+      { "entity_id": "binary_sensor.living_room_motion_occupancy", "state": "on", "last_changed": "2026-10-19T14:48:00.000Z" },
       { "entity_id": "binary_sensor.living_room_motion_occupancy", "state": "off", "last_changed": "2026-10-19T15:40:00.000Z" }
     ],
     [

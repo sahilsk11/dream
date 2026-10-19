@@ -1,0 +1,2039 @@
+{
+"comment": "REAL apartment Home Assistant history (read-only pull), Oct 18 00:00 \u2192 Oct 19 12:00 America/New_York. Raw pad pressure + motion + person only. Oct 19 night expected ~3:53am\u201310:48am ET.",
+"start": "2026-10-18T04:00:00.000Z",
+"end": "2026-10-19T16:00:00.000Z",
+"history": [
+[
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-18T04:00:00+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T04:33:24.782544+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "303",
+"last_changed": "2026-10-18T05:43:08.603046+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T06:23:51.746299+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "358",
+"last_changed": "2026-10-18T06:24:31.438786+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T06:32:32.233835+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "358",
+"last_changed": "2026-10-18T06:33:18.189970+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T06:33:24.187496+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "343",
+"last_changed": "2026-10-18T06:36:20.452012+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T06:37:14.107349+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "341",
+"last_changed": "2026-10-18T06:37:29.558423+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T06:37:37.983549+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "358",
+"last_changed": "2026-10-18T06:37:54.547675+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "292",
+"last_changed": "2026-10-18T06:38:33.510316+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "359",
+"last_changed": "2026-10-18T06:38:40.366234+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T06:39:10.798218+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "357",
+"last_changed": "2026-10-18T06:39:23.520216+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T06:39:58.805753+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "359",
+"last_changed": "2026-10-18T06:40:10.121811+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-18T06:40:16.113627+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T06:40:20.362713+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-18T06:40:33.399968+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "338",
+"last_changed": "2026-10-18T06:41:50.667261+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T06:42:07.477577+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "338",
+"last_changed": "2026-10-18T06:42:27.819229+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "298",
+"last_changed": "2026-10-18T06:42:39.940561+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "2050",
+"last_changed": "2026-10-18T06:42:45.382714+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-18T06:42:55.088087+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "293",
+"last_changed": "2026-10-18T06:43:10.190311+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-18T06:45:09.612645+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "430",
+"last_changed": "2026-10-18T06:45:12.272575+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T06:48:40.759920+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "355",
+"last_changed": "2026-10-18T06:48:42.049297+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-18T06:56:26.702102+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "336",
+"last_changed": "2026-10-18T06:56:28.469794+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T07:33:29.511045+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-18T08:33:28.903857+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T10:33:28.081127+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-18T12:10:05.313801+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "336",
+"last_changed": "2026-10-18T12:14:58.364928+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-18T12:33:27.636259+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "340",
+"last_changed": "2026-10-18T13:36:17.253331+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-18T13:39:52.738181+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "331",
+"last_changed": "2026-10-18T13:40:13.846547+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "964",
+"last_changed": "2026-10-18T13:40:23.674450+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-18T13:40:28.923056+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "325",
+"last_changed": "2026-10-18T13:40:38.044172+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-18T13:40:43.626436+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "338",
+"last_changed": "2026-10-18T13:41:03.134322+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-18T13:41:14.476192+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "808",
+"last_changed": "2026-10-18T13:41:19.894686+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-18T13:41:30.510285+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "320",
+"last_changed": "2026-10-18T13:41:32.296624+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-18T13:42:46.038648+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T19:33:27.283860+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-18T20:33:26.746017+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "361",
+"last_changed": "2026-10-19T05:52:32.646350+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-19T05:53:32.277550+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "unavailable",
+"last_changed": "2026-10-19T06:52:37.443281+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "unknown",
+"last_changed": "2026-10-19T06:52:38.219489+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-19T06:53:21.864381+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "393",
+"last_changed": "2026-10-19T07:53:24.820270+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-19T07:53:32.177751+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "460",
+"last_changed": "2026-10-19T08:11:49.631917+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-19T08:11:55.122935+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "359",
+"last_changed": "2026-10-19T08:17:47.930409+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-19T08:17:52.993545+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "369",
+"last_changed": "2026-10-19T14:30:13.094525+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-19T14:31:33.823876+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "359",
+"last_changed": "2026-10-19T14:38:44.877117+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-19T14:38:50.245163+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "360",
+"last_changed": "2026-10-19T14:39:13.760437+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_left_illuminance",
+"state": "296",
+"last_changed": "2026-10-19T15:33:19.098034+00:00"
+}
+],
+[
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T04:00:00+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "299",
+"last_changed": "2026-10-18T06:06:59.443229+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "396",
+"last_changed": "2026-10-18T06:32:30.305768+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "297",
+"last_changed": "2026-10-18T06:32:36.747557+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "315",
+"last_changed": "2026-10-18T06:38:58.676464+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "299",
+"last_changed": "2026-10-18T06:39:29.348471+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "398",
+"last_changed": "2026-10-18T06:39:59.504729+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "298",
+"last_changed": "2026-10-18T06:45:09.769695+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "613",
+"last_changed": "2026-10-18T06:45:19.666156+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "299",
+"last_changed": "2026-10-18T06:45:28.005253+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "364",
+"last_changed": "2026-10-18T06:45:30.307370+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "298",
+"last_changed": "2026-10-18T06:45:39.494494+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "398",
+"last_changed": "2026-10-18T06:45:42.879620+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "298",
+"last_changed": "2026-10-18T06:45:52.951617+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "420",
+"last_changed": "2026-10-18T06:46:09.556103+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "298",
+"last_changed": "2026-10-18T06:50:43.742861+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "397",
+"last_changed": "2026-10-18T06:50:56.971979+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "298",
+"last_changed": "2026-10-18T06:51:05.211087+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "430",
+"last_changed": "2026-10-18T06:51:05.805078+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "299",
+"last_changed": "2026-10-18T06:51:52.290236+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "440",
+"last_changed": "2026-10-18T06:51:57.605254+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "298",
+"last_changed": "2026-10-18T06:56:32.625609+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "394",
+"last_changed": "2026-10-18T06:57:04.506310+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "298",
+"last_changed": "2026-10-18T06:57:57.376570+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "410",
+"last_changed": "2026-10-18T06:57:59.032615+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "298",
+"last_changed": "2026-10-18T06:58:04.439012+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T07:07:01.933587+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "756",
+"last_changed": "2026-10-18T07:21:51.451890+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "301",
+"last_changed": "2026-10-18T07:21:58.019887+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T08:07:01.538628+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "390",
+"last_changed": "2026-10-18T09:33:05.796662+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "298",
+"last_changed": "2026-10-18T09:33:12.785207+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T10:07:00.679482+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "310",
+"last_changed": "2026-10-18T16:06:57.911620+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "410",
+"last_changed": "2026-10-18T16:16:58.897173+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "299",
+"last_changed": "2026-10-18T16:17:03.970879+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "359",
+"last_changed": "2026-10-18T16:49:47.185066+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "299",
+"last_changed": "2026-10-18T16:50:10.406516+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "297",
+"last_changed": "2026-10-18T17:06:57.533029+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T18:06:57.099492+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "387",
+"last_changed": "2026-10-18T19:37:02.799485+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "318",
+"last_changed": "2026-10-18T19:37:37.329376+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "295",
+"last_changed": "2026-10-18T23:07:01.321576+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "298",
+"last_changed": "2026-10-19T00:06:55.874319+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "480",
+"last_changed": "2026-10-19T01:12:02.115434+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "298",
+"last_changed": "2026-10-19T01:12:10.219720+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "387",
+"last_changed": "2026-10-19T01:12:15.578928+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "298",
+"last_changed": "2026-10-19T01:12:31.681090+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "390",
+"last_changed": "2026-10-19T01:13:17.882859+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "298",
+"last_changed": "2026-10-19T01:13:24.494656+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "unavailable",
+"last_changed": "2026-10-19T06:52:37.258862+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "unknown",
+"last_changed": "2026-10-19T06:52:38.198262+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "298",
+"last_changed": "2026-10-19T06:53:21.796426+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "387",
+"last_changed": "2026-10-19T07:53:18.994920+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "298",
+"last_changed": "2026-10-19T07:53:24.426330+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "1358",
+"last_changed": "2026-10-19T08:41:20.125887+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "299",
+"last_changed": "2026-10-19T08:41:27.858928+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "298",
+"last_changed": "2026-10-19T10:06:51.262378+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "299",
+"last_changed": "2026-10-19T11:06:50.617122+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "298",
+"last_changed": "2026-10-19T12:06:50.268128+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "299",
+"last_changed": "2026-10-19T14:06:49.147553+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "395",
+"last_changed": "2026-10-19T14:48:41.486295+00:00"
+},
+{
+"entity_id": "sensor.bed_sensor_right_illuminance",
+"state": "299",
+"last_changed": "2026-10-19T14:48:51.707910+00:00"
+}
+],
+[
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T04:00:00+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T04:00:33.956796+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T04:01:12.742636+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T04:48:13.689243+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T04:49:01.673034+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T04:58:43.249500+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T04:59:17.286020+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T05:14:38.050627+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T05:15:10.735186+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T06:24:11.103425+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T06:24:43.884295+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T06:29:35.108524+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T06:30:07.804094+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T12:10:39.432899+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T12:11:11.991571+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T12:14:30.428975+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T12:15:04.213800+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T14:05:19.070898+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T14:05:53.097882+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T14:07:50.968532+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T14:08:24.838362+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T14:12:18.949119+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T14:12:52.497031+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T14:17:56.711790+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T14:19:18.093468+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T14:26:58.465427+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T14:27:30.836871+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T14:28:00.557612+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T14:28:58.647984+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T14:29:56.201328+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T14:30:50.421984+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T16:10:16.503269+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T16:11:16.003815+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T16:11:32.898659+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T16:12:09.107584+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T16:16:26.270689+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T16:17:00.875900+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T16:19:08.134627+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T16:19:40.544827+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T16:25:56.945419+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T16:26:30.985429+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T16:47:07.172311+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T16:48:25.973092+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T16:48:49.125144+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T16:49:53.230415+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T16:54:21.815815+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T16:56:02.948027+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T16:56:03.531936+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T16:56:41.490184+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T17:41:31.102943+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T17:42:15.985836+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T18:45:08.233854+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T18:45:41.117696+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T19:00:18.114011+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T19:00:51.538724+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T01:29:11.803676+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T01:29:45.768283+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T01:31:51.402938+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T01:32:24.903993+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "unavailable",
+"last_changed": "2026-10-19T06:52:36.815500+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "unknown",
+"last_changed": "2026-10-19T06:52:38.213329+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T06:53:21.834222+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T07:45:47.763163+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T07:46:20.167519+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T07:50:49.785113+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T07:51:24.635505+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T14:48:56.630803+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T14:49:30.097355+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T15:21:59.640564+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T15:22:34.384615+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T15:25:34.463632+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T15:26:21.307936+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T15:27:10.641948+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T15:27:43.180030+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T15:28:31.304510+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T15:29:18.503172+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T15:29:32.316072+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T15:30:05.735276+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T15:39:20.480886+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T15:39:53.634157+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T15:51:46.727161+00:00"
+},
+{
+"entity_id": "binary_sensor.living_room_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T15:52:19.064257+00:00"
+}
+],
+[
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T04:00:00+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T04:00:56.731195+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T04:02:50.889747+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T04:47:39.361650+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T04:48:42.915511+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T05:14:42.535797+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T05:15:26.310691+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T05:42:42.154521+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T05:43:22.005498+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T06:22:26.345366+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T06:24:31.785255+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T06:29:53.532418+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T06:30:50.454474+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T12:10:14.602058+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T12:11:10.187919+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T14:07:54.211221+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T14:08:52.290297+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T14:18:48.518219+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T14:19:43.822607+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T16:11:23.435627+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T16:11:55.459419+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T16:34:03.306428+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T16:34:35.835795+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T16:53:14.294423+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T16:54:14.320190+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T16:55:38.969031+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T16:56:31.375279+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T18:44:54.750441+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T18:45:27.618369+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T19:00:28.617168+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T19:02:02.522039+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T19:02:24.892381+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T19:03:42.952133+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T19:04:15.248057+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T19:04:53.504195+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T19:26:53.365061+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T19:27:39.697598+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T01:28:54.303359+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T01:29:32.714746+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T02:20:19.515886+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T02:23:31.464818+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T02:24:11.369693+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T02:24:55.353335+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T02:27:33.304194+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T02:28:21.561071+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T02:34:49.715566+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T02:35:50.908733+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T02:35:51.336566+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T02:37:20.446725+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T02:38:08.022884+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T02:38:40.719285+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T02:42:16.936916+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T02:43:07.409308+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T02:44:09.392750+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T02:44:46.968864+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T02:45:24.342548+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T02:46:28.323616+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T02:49:09.497035+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T02:50:46.591729+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T03:20:51.487332+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T03:21:23.965134+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T03:37:15.570175+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T03:37:48.159381+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T04:08:26.328601+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T04:09:13.538782+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T05:23:57.078298+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T05:26:52.760513+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T05:26:59.059381+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T05:28:54.206479+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T05:31:04.671692+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T05:31:42.680058+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T05:48:32.704568+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T05:49:23.165206+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "unavailable",
+"last_changed": "2026-10-19T06:52:36.783512+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "unknown",
+"last_changed": "2026-10-19T06:52:38.203236+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T06:53:21.819884+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T07:50:57.639694+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T07:52:38.418392+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T15:52:06.440333+00:00"
+},
+{
+"entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T15:53:34.804822+00:00"
+}
+],
+[
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T04:00:00+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T04:00:35.710024+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T04:01:07.942462+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T04:48:15.587077+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T04:49:00.876367+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T04:58:45.829993+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T05:00:09.657302+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T05:00:18.209055+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T05:00:50.523854+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T05:01:52.472106+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T05:02:42.053421+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T05:03:17.651912+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T05:04:46.100089+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T05:04:47.108954+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T05:08:22.103933+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T05:08:33.935811+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T05:09:52.150172+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T05:11:31.166333+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T05:15:09.262226+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T06:24:12.941083+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T06:25:00.481847+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T06:25:35.834163+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T06:27:01.338191+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T06:29:26.675308+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T06:30:06.681449+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T12:10:41.077592+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T12:11:22.008597+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T12:12:09.778493+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T12:12:44.674780+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T12:13:44.306923+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T12:15:02.376947+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T14:05:22.828980+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T14:08:22.211770+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T14:12:20.711345+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T14:13:07.988070+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T14:13:58.475114+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T14:14:30.831319+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T14:17:12.460103+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T14:18:27.750898+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T14:27:00.560187+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T14:27:35.271173+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T14:27:44.391499+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T14:28:32.652979+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T16:10:46.938259+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T16:11:22.363270+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T16:12:44.574236+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T16:13:17.923833+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T16:16:14.431180+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T16:16:58.309837+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T16:19:09.476604+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T16:19:56.278626+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T16:23:27.065524+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T16:26:28.766916+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T18:45:09.965276+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T18:45:45.265593+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T18:47:49.961461+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T18:48:22.344625+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T18:57:05.447685+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T18:57:56.456631+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T18:59:00.923095+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T18:59:37.432866+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-18T19:00:03.135182+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-18T19:00:49.935890+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T01:29:14.868973+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T01:29:57.037978+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T01:29:58.142782+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T01:30:42.686706+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T01:31:07.415483+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T01:32:23.088483+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "unavailable",
+"last_changed": "2026-10-19T06:52:36.801890+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "unknown",
+"last_changed": "2026-10-19T06:52:38.209250+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T06:53:21.824020+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T07:45:49.898252+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T07:46:23.844467+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T07:47:18.773178+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T07:47:51.076380+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T07:49:23.436430+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T07:49:57.525210+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T07:50:39.897177+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T07:51:21.850834+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T14:48:59.904106+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T14:49:39.028722+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T14:57:01.035796+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T14:57:33.719057+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T15:03:11.569032+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T15:03:45.119975+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T15:03:53.570084+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T15:04:25.580659+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T15:04:47.747658+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T15:06:35.917307+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T15:21:09.362719+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T15:22:31.430830+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T15:25:49.964721+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T15:26:44.289588+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T15:27:05.059289+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T15:27:42.174357+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T15:28:33.193831+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T15:29:17.316856+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T15:39:22.452446+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T15:40:02.031944+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "on",
+"last_changed": "2026-10-19T15:50:00.808890+00:00"
+},
+{
+"entity_id": "binary_sensor.bathroom_motion_occupancy",
+"state": "off",
+"last_changed": "2026-10-19T15:52:18.331411+00:00"
+}
+],
+[
+{
+"entity_id": "person.sahil",
+"state": "home",
+"last_changed": "2026-10-18T04:00:00+00:00"
+},
+{
+"entity_id": "person.sahil",
+"state": "not_home",
+"last_changed": "2026-10-18T17:01:36.199091+00:00"
+},
+{
+"entity_id": "person.sahil",
+"state": "home",
+"last_changed": "2026-10-18T17:38:14.653386+00:00"
+},
+{
+"entity_id": "person.sahil",
+"state": "home",
+"last_changed": "2026-10-19T06:52:18.472114+00:00"
+}
+]
+]
+}

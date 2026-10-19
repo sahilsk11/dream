@@ -90,6 +90,7 @@ function mockSleepDb() {
             row.local_date = String(args[2]);
             row.in_progress = Number(args[3]);
             row.updated_at = String(args[4]);
+            if (q.includes("external_id = ?") && args.length >= 7 && args[5] != null) row.external_id = String(args[5]);
             return { meta: { changes: 1 } };
           }
           if (/INSERT INTO sleep_sync_state/i.test(q)) {
@@ -185,7 +186,7 @@ describe("session building from Oct 18→19 fixture", () => {
       [
         {
           start: "2026-10-18T18:10:00.000Z",
-          end: "2026-10-18T18:50:00.000Z",
+          end: "2026-10-18T19:00:00.000Z",
           in_progress: false,
         },
         {
@@ -226,7 +227,7 @@ describe("session building edge cases", () => {
   const end = "2026-10-19T12:00:00.000Z";
   const opts = { startMs: Date.parse(start), endMs: Date.parse(end) };
 
-  it("starts after the last outside motion, ends at the last spike before persistent motion", () => {
+  it("starts after the last outside motion, ends where sustained motion begins", () => {
     const history = pack([
       [
         st("sensor.bed_sensor_left_illuminance", start, 296),
@@ -247,7 +248,7 @@ describe("session building edge cases", () => {
     ]);
     const sessions = buildSleepSessions(history, opts);
     assert.deepEqual(sessions.map((s) => [s.start, s.end, s.in_progress]), [
-      ["2026-10-19T01:00:00.000Z", "2026-10-19T08:00:00.000Z", false],
+      ["2026-10-19T01:00:00.000Z", "2026-10-19T08:10:00.000Z", false],
     ]);
   });
 
@@ -257,6 +258,8 @@ describe("session building edge cases", () => {
         st("sensor.bed_sensor_left_illuminance", start, 296),
         st("sensor.bed_sensor_left_illuminance", "2026-10-19T01:00:00.000Z", 360),
         st("sensor.bed_sensor_left_illuminance", "2026-10-19T01:00:08.000Z", 296),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T03:00:00.000Z", 360),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T03:00:08.000Z", 296),
       ],
       [
         st("binary_sensor.kitchen_cabinet_motion_occupancy", start, "off"),
@@ -289,7 +292,7 @@ describe("session building edge cases", () => {
     const sessions = buildSleepSessions(history, opts);
     assert.equal(sessions.length, 1);
     assert.equal(sessions[0].start, "2026-10-19T01:00:00.000Z");
-    assert.equal(sessions[0].end, "2026-10-19T07:00:00.000Z");
+    assert.equal(sessions[0].end, "2026-10-19T07:05:00.000Z");
     assert.notEqual(sessions[0].end, "2026-10-19T08:00:00.000Z");
   });
 
@@ -385,12 +388,12 @@ describe("reconciliation", () => {
     assert.equal(db.sessions.get("edited-night")?.end_at, "2026-10-19T15:00:00.000Z");
   });
 
-  it("extends an in-progress sensor session then closes it with the last spike", async () => {
+  it("extends an in-progress sensor session then closes it at the morning motion", async () => {
     const env = testEnv();
     const db = (env as Bindings & { _db: ReturnType<typeof mockSleepDb> })._db;
     const start = fixture.expected.start;
     const noon = "2026-10-19T16:00:00.000Z";
-    const lastSpike = fixture.expected.end;
+    const lastSpike = fixture.expected.end; // morning motion begins here
     const historyOpen = pack([
       [
         st("sensor.bed_sensor_left_illuminance", "2026-10-18T04:00:00.000Z", 296),
@@ -417,12 +420,12 @@ describe("reconciliation", () => {
         st("sensor.bed_sensor_left_illuminance", "2026-10-18T04:00:00.000Z", 296),
         st("sensor.bed_sensor_left_illuminance", start, 360),
         st("sensor.bed_sensor_left_illuminance", "2026-10-19T07:53:08.000Z", 296),
-        st("sensor.bed_sensor_left_illuminance", lastSpike, 357),
-        st("sensor.bed_sensor_left_illuminance", "2026-10-19T14:48:08.000Z", 296),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T14:38:00.000Z", 357),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T14:38:08.000Z", 296),
       ],
       [
         st("binary_sensor.living_room_motion_occupancy", "2026-10-18T04:00:00.000Z", "off"),
-        st("binary_sensor.living_room_motion_occupancy", "2026-10-19T14:50:00.000Z", "on"),
+        st("binary_sensor.living_room_motion_occupancy", "2026-10-19T14:48:00.000Z", "on"),
         st("binary_sensor.living_room_motion_occupancy", "2026-10-19T15:20:00.000Z", "off"),
       ],
       [st("person.sahil", "2026-10-18T04:00:00.000Z", "home")],
@@ -438,6 +441,76 @@ describe("reconciliation", () => {
     assert.equal(second.updated, 1);
     assert.equal(row.end_at, lastSpike);
     assert.equal(row.in_progress, 0);
+    assert.equal(db.sessions.size, 1);
+  });
+});
+
+describe("real Oct 18→19 Home Assistant history", () => {
+  const real = JSON.parse(
+    readFileSync(join(here, "fixtures/ha_sleep_history_real.json"), "utf8"),
+  ) as { start: string; end: string; history: HaState[][] };
+  const opts = { startMs: Date.parse(real.start), endMs: Date.parse(real.end) };
+
+  it("builds Oct 19 as 3:53am–10:48am ET from raw pressure + motion", () => {
+    const night = buildSleepSessions(real.history, opts).filter((s) => s.start.startsWith("2026-10-19"));
+    assert.equal(night.length, 1, "the lone 1:52am spike while he was still up is not a session");
+    assert.equal(etTime(night[0].start), "03:53");
+    assert.equal(etTime(night[0].end), "10:48");
+    assert.equal(night[0].in_progress, false);
+  });
+
+  it("ignores the stuck-high 360 left pad (10:39–11:33) once he is moving", () => {
+    const sessions = buildSleepSessions(real.history, opts);
+    assert.equal(sessions.some((s) => Date.parse(s.end) > Date.parse("2026-10-19T14:49:00.000Z") && s.start.startsWith("2026-10-19")), false);
+  });
+
+  it("reconciles into a backfilled unconfirmed sensor row with a different id", async () => {
+    const env = testEnv();
+    const db = (env as Bindings & { _db: ReturnType<typeof mockSleepDb> })._db;
+    db.sessions.set("backfill", {
+      id: "backfill",
+      start_at: "2026-10-19T07:53:00.000Z",
+      end_at: "2026-10-19T14:48:00.000Z",
+      local_date: "2026-10-19",
+      source: "sensor",
+      confirmed: 0,
+      external_id: "ha-bed:2026-10-19T07:53Z",
+      notes: null,
+      is_example: 0,
+      in_progress: 0,
+      created_at: "2026-10-19T17:00:00.000Z",
+      updated_at: "2026-10-19T17:00:00.000Z",
+    });
+    const built = buildSleepSessions(real.history, opts).filter((s) => s.start.startsWith("2026-10-19"));
+    const first = await ingestSleep(env, "America/New_York", built);
+    assert.equal(first.inserted, 0);
+    assert.equal(db.sessions.size, 1);
+    const again = await ingestSleep(env, "America/New_York", built);
+    assert.equal(again.inserted, 0);
+    assert.equal(db.sessions.size, 1);
+  });
+
+  it("never touches a confirmed sensor row that overlaps", async () => {
+    const env = testEnv();
+    const db = (env as Bindings & { _db: ReturnType<typeof mockSleepDb> })._db;
+    db.sessions.set("mine", {
+      id: "mine",
+      start_at: "2026-10-19T07:30:00.000Z",
+      end_at: "2026-10-19T15:00:00.000Z",
+      local_date: "2026-10-19",
+      source: "sensor",
+      confirmed: 1,
+      external_id: "ha-bed:x",
+      notes: null,
+      is_example: 0,
+      in_progress: 0,
+      created_at: "2026-10-19T17:00:00.000Z",
+      updated_at: "2026-10-19T17:00:00.000Z",
+    });
+    const built = buildSleepSessions(real.history, opts).filter((s) => s.start.startsWith("2026-10-19"));
+    const r = await ingestSleep(env, "America/New_York", built);
+    assert.equal(r.inserted + r.updated, 0);
+    assert.equal(db.sessions.get("mine")?.start_at, "2026-10-19T07:30:00.000Z");
     assert.equal(db.sessions.size, 1);
   });
 });
