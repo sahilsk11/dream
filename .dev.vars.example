@@ -16,3 +16,7 @@ USDA_API_KEY=DEMO_KEY
 # WYZE_KEY_ID=
 # WYZE_API_KEY=
 # WYZE_TOTP_SECRET=
+
+# Home Assistant (worker secrets in prod — names only here, never commit values)
+# HA_URL=https://your-home-assistant.example
+# HA_TOKEN=

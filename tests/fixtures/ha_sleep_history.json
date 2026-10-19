@@ -1,0 +1,45 @@
+{
+  "comment": "36h window ending noon EDT 2026-10-19 (16:00Z). Pressure last-value-holds; empty ~296 occupied ~360.",
+  "start": "2026-10-18T04:00:00.000Z",
+  "end": "2026-10-19T16:00:00.000Z",
+  "history": [
+    [
+      { "entity_id": "sensor.bed_sensor_left_illuminance", "state": "296", "last_changed": "2026-10-18T04:00:00.000Z" },
+      { "entity_id": "sensor.bed_sensor_left_illuminance", "state": "365", "last_changed": "2026-10-18T15:00:00.000Z" },
+      { "entity_id": "sensor.bed_sensor_left_illuminance", "state": "296", "last_changed": "2026-10-18T15:12:00.000Z" },
+      { "entity_id": "sensor.bed_sensor_left_illuminance", "state": "358", "last_changed": "2026-10-18T18:10:00.000Z" },
+      { "entity_id": "sensor.bed_sensor_left_illuminance", "state": "296", "last_changed": "2026-10-18T18:52:00.000Z" },
+      { "entity_id": "sensor.bed_sensor_left_illuminance", "state": "350", "last_changed": "2026-10-18T21:00:00.000Z" },
+      { "entity_id": "sensor.bed_sensor_left_illuminance", "state": "296", "last_changed": "2026-10-18T21:08:00.000Z" },
+      { "entity_id": "sensor.bed_sensor_left_illuminance", "state": "360", "last_changed": "2026-10-19T03:05:00.000Z" },
+      { "entity_id": "sensor.bed_sensor_left_illuminance", "state": "296", "last_changed": "2026-10-19T07:00:00.000Z" },
+      { "entity_id": "sensor.bed_sensor_left_illuminance", "state": "360", "last_changed": "2026-10-19T07:06:00.000Z" },
+      { "entity_id": "sensor.bed_sensor_left_illuminance", "state": "296", "last_changed": "2026-10-19T11:00:00.000Z" }
+    ],
+    [
+      { "entity_id": "sensor.bed_sensor_right_illuminance", "state": "296", "last_changed": "2026-10-18T04:00:00.000Z" },
+      { "entity_id": "sensor.bed_sensor_right_illuminance", "state": "358", "last_changed": "2026-10-18T18:10:00.000Z" },
+      { "entity_id": "sensor.bed_sensor_right_illuminance", "state": "296", "last_changed": "2026-10-18T18:52:00.000Z" },
+      { "entity_id": "sensor.bed_sensor_right_illuminance", "state": "360", "last_changed": "2026-10-19T03:05:00.000Z" },
+      { "entity_id": "sensor.bed_sensor_right_illuminance", "state": "296", "last_changed": "2026-10-19T07:00:00.000Z" },
+      { "entity_id": "sensor.bed_sensor_right_illuminance", "state": "360", "last_changed": "2026-10-19T07:06:00.000Z" },
+      { "entity_id": "sensor.bed_sensor_right_illuminance", "state": "296", "last_changed": "2026-10-19T11:00:00.000Z" }
+    ],
+    [
+      { "entity_id": "binary_sensor.living_room_motion_occupancy", "state": "off", "last_changed": "2026-10-18T04:00:00.000Z" }
+    ],
+    [
+      { "entity_id": "binary_sensor.kitchen_cabinet_motion_occupancy", "state": "off", "last_changed": "2026-10-18T04:00:00.000Z" }
+    ],
+    [
+      { "entity_id": "binary_sensor.bathroom_motion_occupancy", "state": "off", "last_changed": "2026-10-18T04:00:00.000Z" },
+      { "entity_id": "binary_sensor.bathroom_motion_occupancy", "state": "on", "last_changed": "2026-10-19T07:00:00.000Z" },
+      { "entity_id": "binary_sensor.bathroom_motion_occupancy", "state": "off", "last_changed": "2026-10-19T07:04:00.000Z" }
+    ],
+    [
+      { "entity_id": "person.sahil", "state": "home", "last_changed": "2026-10-18T04:00:00.000Z" },
+      { "entity_id": "person.sahil", "state": "not_home", "last_changed": "2026-10-18T13:00:00.000Z" },
+      { "entity_id": "person.sahil", "state": "home", "last_changed": "2026-10-18T15:30:00.000Z" }
+    ]
+  ]
+}

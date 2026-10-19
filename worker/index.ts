@@ -35,11 +35,16 @@ import { deleteWeight, ingestWeight, insertWeight, listWeight, updateWeight } fr
 import {
   getSyncState,
   listScale,
-  maybeRunNoonScaleSync,
   publicScale,
   publicSyncState,
   runScaleSync,
 } from "./scale.ts";
+import { maybeRunNoonSyncs } from "./cron.ts";
+import {
+  getSleepSyncState,
+  publicSleepSyncState,
+  runSleepSync,
+} from "./sleep_sync.ts";
 import { maybeSeed, seedExample } from "./seed.ts";
 
 type AppEnv = { Bindings: Bindings };
@@ -110,8 +115,14 @@ app.get("/api/sleep", async (c) => {
   const date = c.req.query("date");
   const from = c.req.query("from");
   const to = c.req.query("to");
-  const rows = await listSleep(c.env, { date, from, to });
-  return json({ sessions: rows.map(publicSleep) });
+  const [rows, sleepSync] = await Promise.all([
+    listSleep(c.env, { date, from, to }),
+    getSleepSyncState(c.env),
+  ]);
+  return json({
+    sessions: rows.map(publicSleep),
+    sync: publicSleepSyncState(sleepSync, Boolean(c.env.HA_URL && c.env.HA_TOKEN)),
+  });
 });
 
 app.post("/api/sleep", async (c) => {
@@ -193,19 +204,21 @@ app.post("/api/sleep/merge", async (c) => {
 app.post("/api/ingest/sleep", async (c) => {
   const tz = tzOf(c.env.DREAM_TZ);
   const body = (await c.req.json()) as {
-    intervals?: Array<{ start: string; end: string; external_id?: string; id?: string }>;
+    intervals?: Array<{ start: string; end: string; external_id?: string; id?: string; in_progress?: boolean }>;
     start?: string;
     end?: string;
     external_id?: string;
+    in_progress?: boolean;
   };
   const intervals = body.intervals?.length
     ? body.intervals.map((i) => ({
         start: i.start,
         end: i.end,
         external_id: i.external_id ?? i.id,
+        in_progress: i.in_progress,
       }))
     : body.start && body.end
-      ? [{ start: body.start, end: body.end, external_id: body.external_id }]
+      ? [{ start: body.start, end: body.end, external_id: body.external_id, in_progress: body.in_progress }]
       : [];
   if (!intervals.length) return json({ error: "intervals required" }, 400);
   const result = await ingestSleep(c.env, tz, intervals);
@@ -386,6 +399,18 @@ app.post("/api/sync/scale", async (c) => {
   return json(result, result.ok ? 200 : result.error?.includes("not configured") ? 503 : 502);
 });
 
+app.post("/api/sync/sleep", async (c) => {
+  let body: { hours?: number } = {};
+  try {
+    body = (await c.req.json()) as { hours?: number };
+  } catch {
+    body = {};
+  }
+  const hoursRaw = c.req.query("hours") ?? body.hours;
+  const result = await runSleepSync(c.env, { hours: hoursRaw != null ? Number(hoursRaw) : undefined });
+  return json(result, result.ok ? 200 : result.error?.includes("not configured") ? 503 : 502);
+});
+
 app.get("/api/export", async (c) => {
   const tz = tzOf(c.env.DREAM_TZ);
   const [sleep, food, weight, scale] = await Promise.all([
@@ -416,9 +441,10 @@ export default {
   },
   async scheduled(controller: ScheduledController, env: Bindings, ctx: ExecutionContext) {
     ctx.waitUntil(
-      maybeRunNoonScaleSync(env, controller.scheduledTime).then((result) => {
+      maybeRunNoonSyncs(env, controller.scheduledTime).then((result) => {
         if ("skipped" in result) return;
-        if (!result.ok) console.error("scale sync failed", result.error);
+        if (!result.scale.ok) console.error("scale sync failed", result.scale.error);
+        if (!result.sleep.ok) console.error("sleep sync failed", result.sleep.error);
       }),
     );
   },

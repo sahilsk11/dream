@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Scissors, Trash2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, RefreshCw, Scissors, Trash2, X } from "lucide-react";
 import { api } from "./api.js";
 import {
   addDays,
@@ -37,12 +37,15 @@ function canMerge(a, b) {
 export default function Sleep({ tz, today, toast }) {
   const [date, setDate] = useState(today);
   const [sessions, setSessions] = useState([]);
+  const [sync, setSync] = useState(null);
+  const [syncing, setSyncing] = useState(false);
   const [editing, setEditing] = useState(null);
   const [adding, setAdding] = useState(false);
 
   async function load(d = date) {
     const data = await api.sleep(d);
     setSessions(data.sessions || []);
+    setSync(data.sync || null);
   }
 
   useEffect(() => {
@@ -52,7 +55,25 @@ export default function Sleep({ tz, today, toast }) {
   const win = dayWindow(date, tz);
   const total = sessions.reduce((n, s) => n + (s.duration_min || 0), 0);
   const naps = sessions.filter((s) => isNap(s, tz));
-  const unconfirmed = sessions.filter((s) => !s.confirmed);
+  const unconfirmed = sessions.filter((s) => !s.confirmed && !s.in_progress);
+  const open = sessions.filter((s) => s.in_progress);
+  const openLine = open[0]
+    ? `in bed until at least ${fmtTime(open[0].end_at, tz)}`
+    : null;
+
+  async function syncNow() {
+    setSyncing(true);
+    try {
+      const result = await api.syncSleep();
+      if (result.ok) toast(`synced ${result.built} session${result.built === 1 ? "" : "s"}`);
+      else toast(result.error || "sleep sync failed");
+      await load();
+    } catch (e) {
+      toast(e.message);
+    } finally {
+      setSyncing(false);
+    }
+  }
 
   return (
     <>
@@ -74,6 +95,7 @@ export default function Sleep({ tz, today, toast }) {
             {sessions.length ? `${sessions.length} session${sessions.length === 1 ? "" : "s"}` : "no sessions"}
             {naps.length ? ` · ${naps.length} nap${naps.length === 1 ? "" : "s"}` : ""}
             {unconfirmed.length ? ` · ${unconfirmed.length} to confirm` : ""}
+            {openLine ? ` · ${openLine}` : ""}
             {date !== today ? " · " : ""}
             {date !== today ? (
               <button className="linkish" onClick={() => setDate(today)}>
@@ -82,6 +104,20 @@ export default function Sleep({ tz, today, toast }) {
             ) : null}
           </p>
         </div>
+      </div>
+
+      {sync?.last_error ? <div className="sync-error">{sync.last_error}</div> : null}
+      <div className="sync-bar">
+        <span>
+          {sync?.last_sync_at
+            ? `synced ${fmtDay(sync.last_sync_at.slice(0, 10), tz)}`
+            : "sleep not synced yet"}
+          {sync?.last_count != null ? ` · ${sync.last_count}` : ""}
+        </span>
+        <button type="button" className="quiet sync-btn" onClick={syncNow} disabled={syncing}>
+          <RefreshCw size={14} strokeWidth={2} className={syncing ? "spin" : ""} />
+          {syncing ? "syncing" : "sync sleep"}
+        </button>
       </div>
 
       <Timeline sessions={sessions} win={win} tz={tz} onPick={setEditing} showNow={date === today} />
@@ -104,24 +140,30 @@ export default function Sleep({ tz, today, toast }) {
 
       <div className="list">
         {sessions.map((s, i) => (
-          <div key={s.id} className={`row-item ${s.confirmed ? "" : "pending"}`} onClick={() => setEditing(s)}>
+          <div key={s.id} className={`row-item ${s.in_progress ? "in-progress" : s.confirmed ? "" : "pending"}`} onClick={() => setEditing(s)}>
             <div className="grow">
               <div className="row-title">
-                {fmtTime(s.start_at, tz)} – {fmtTime(s.end_at, tz)}
+                {s.in_progress
+                  ? `${fmtTime(s.start_at, tz)} – at least ${fmtTime(s.end_at, tz)}`
+                  : `${fmtTime(s.start_at, tz)} – ${fmtTime(s.end_at, tz)}`}
               </div>
               <div className="row-meta">
-                {isNap(s, tz) ? "nap" : "night"}
+                {s.in_progress
+                  ? `in bed until at least ${fmtTime(s.end_at, tz)}`
+                  : isNap(s, tz)
+                    ? "nap"
+                    : "night"}
                 {noteLine(s.notes) ? ` · ${noteLine(s.notes)}` : ""}
               </div>
             </div>
             <div className="row-right">
-              <div className="dur">{durationLabel(s.duration_min)}</div>
-              <div className={`badge ${s.confirmed ? "" : "warn"} ${isNap(s, tz) ? "nap" : ""}`}>
-                {s.confirmed ? s.source : "review"}
+              <div className="dur">{s.in_progress ? `${durationLabel(s.duration_min)}+` : durationLabel(s.duration_min)}</div>
+              <div className={`badge ${s.in_progress ? "live" : s.confirmed ? "" : "warn"} ${isNap(s, tz) ? "nap" : ""}`}>
+                {s.in_progress ? "in bed" : s.confirmed ? s.source : "review"}
               </div>
             </div>
             <div className="row-actions" onClick={(e) => e.stopPropagation()}>
-              {!s.confirmed ? (
+              {!s.confirmed && !s.in_progress ? (
                 <button
                   className="linkish"
                   onClick={async () => {
@@ -202,7 +244,7 @@ function Timeline({ sessions, win, tz, onPick, activeId, onDrag, showNow }) {
         return (
           <div
             key={s.id}
-            className={`tl-block ${nap ? "nap" : ""} ${s.confirmed ? "" : "unconfirmed"} ${activeId === s.id ? "editing" : ""}`}
+            className={`tl-block ${nap ? "nap" : ""} ${s.in_progress ? "in-progress" : s.confirmed ? "" : "unconfirmed"} ${activeId === s.id ? "editing" : ""}`}
             style={{ left: `${Math.max(0, left)}%`, right: `${Math.max(0, right)}%` }}
             onClick={() => onPick?.(s)}
           >
@@ -266,7 +308,11 @@ function Editor({ tz, session, win, onClose, onSaved }) {
         <div className="sheet-head">
           <div>
             <h3>{isNap(draft, tz) ? "nap" : "night"}</h3>
-            <p className="lede">drag handles · {durationLabel(mins)}</p>
+            <p className="lede">
+              {session.in_progress
+                ? `in bed until at least ${fmtTime(end, tz)} · ${durationLabel(mins)} so far`
+                : `drag handles · ${durationLabel(mins)}`}
+            </p>
           </div>
           <button className="icon-btn" aria-label="close" onClick={onClose}>
             <X size={18} strokeWidth={1.75} />

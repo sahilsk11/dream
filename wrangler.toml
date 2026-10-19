@@ -30,6 +30,7 @@ migrations_dir = "migrations"
 [vars]
 DREAM_TZ = "America/New_York"
 ALLOW_SEED = "false"
+SLEEP_PRESSURE_THRESHOLD = "330"
 # Browser auth = Cloudflare Access only (no passcode). The Worker verifies
 # Cf-Access-Jwt-Assertion against this team + the `dream` Access app aud and
 # admits only these emails. Agents still need Bearer DREAM_API_TOKEN (their
@@ -40,6 +41,7 @@ ACCESS_ALLOWED_EMAILS = "sahilkapur.a@gmail.com"
 
 # 16:00 UTC = noon EDT; 17:00 UTC = noon EST. scheduled() still guards
 # America/New_York local hour === 12 so only one fires on a given day.
+# Noon job: scale sync, then sleep sync (isolated).
 [triggers]
 crons = ["0 16 * * *", "0 17 * * *"]
 

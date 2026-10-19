@@ -14,6 +14,7 @@ const edited = (over: Partial<SleepRow> = {}): SleepRow => ({
   external_id: "ha-1",
   notes: null,
   is_example: 0,
+  in_progress: 0,
   created_at: "2026-10-18T14:00:00.000Z",
   updated_at: "2026-10-18T14:00:00.000Z",
   ...over,
