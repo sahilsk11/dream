@@ -56,6 +56,7 @@ export async function insertSleep(
     external_id?: string | null;
     notes?: string | null;
     is_example?: number;
+    in_progress?: number;
   },
 ): Promise<SleepRow> {
   assertRange(input.start_at, input.end_at);
@@ -70,13 +71,14 @@ export async function insertSleep(
     external_id: input.external_id ?? null,
     notes: input.notes ?? null,
     is_example: input.is_example ?? 0,
+    in_progress: input.in_progress ? 1 : 0,
     created_at: now,
     updated_at: now,
   };
   await env.DB.prepare(
     `INSERT INTO sleep_sessions
-      (id, start_at, end_at, local_date, source, confirmed, external_id, notes, is_example, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      (id, start_at, end_at, local_date, source, confirmed, external_id, notes, is_example, in_progress, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   )
     .bind(
       row.id,
@@ -88,6 +90,7 @@ export async function insertSleep(
       row.external_id,
       row.notes,
       row.is_example,
+      row.in_progress,
       row.created_at,
       row.updated_at,
     )
@@ -116,19 +119,23 @@ export async function updateSleep(
     start !== existing.start_at || end !== existing.end_at;
   let source = patch.source ?? existing.source;
   let confirmed = patch.confirmed ?? existing.confirmed;
+  let in_progress = existing.in_progress ? 1 : 0;
   if (timesChanged && existing.source === "sensor") {
     source = "edited";
     confirmed = 1;
+    in_progress = 0;
   }
   if (timesChanged && existing.source === "manual") {
     source = "manual";
     confirmed = 1;
+    in_progress = 0;
   }
+  if (source === "edited") in_progress = 0;
   const now = nowIso();
   const local_date = sleepDay(end, tz);
   await env.DB.prepare(
     `UPDATE sleep_sessions
-     SET start_at = ?, end_at = ?, local_date = ?, source = ?, confirmed = ?, notes = ?, updated_at = ?
+     SET start_at = ?, end_at = ?, local_date = ?, source = ?, confirmed = ?, notes = ?, in_progress = ?, updated_at = ?
      WHERE id = ?`,
   )
     .bind(
@@ -138,6 +145,7 @@ export async function updateSleep(
       source,
       confirmed,
       patch.notes === undefined ? existing.notes : patch.notes,
+      in_progress,
       now,
       id,
     )
@@ -157,7 +165,7 @@ export async function confirmSleep(env: Bindings, id: string): Promise<SleepRow 
   if (!existing) return null;
   const now = nowIso();
   await env.DB.prepare(
-    "UPDATE sleep_sessions SET confirmed = 1, updated_at = ? WHERE id = ?",
+    "UPDATE sleep_sessions SET confirmed = 1, in_progress = 0, updated_at = ? WHERE id = ?",
   )
     .bind(now, id)
     .run();
@@ -182,7 +190,7 @@ export async function splitSleep(
   const secondStart = at;
   await env.DB.prepare(
     `UPDATE sleep_sessions
-     SET end_at = ?, local_date = ?, source = 'edited', confirmed = 1, updated_at = ?
+     SET end_at = ?, local_date = ?, source = 'edited', confirmed = 1, in_progress = 0, updated_at = ?
      WHERE id = ?`,
   )
     .bind(firstEnd, sleepDay(firstEnd, tz), now, id)
@@ -225,6 +233,7 @@ export type IngestInterval = {
   start: string;
   end: string;
   external_id?: string;
+  in_progress?: boolean;
 };
 
 export type IngestDecision =
@@ -235,6 +244,7 @@ export type IngestDecision =
 export function decideSleepIngest(
   existing: SleepRow[],
   interval: IngestInterval,
+  claimed?: Set<string>,
 ): IngestDecision {
   const ext = interval.external_id;
   if (ext) {
@@ -266,6 +276,23 @@ export function decideSleepIngest(
   if (same) {
     return { action: "skip", reason: "duplicate_times", id: same.id, interval };
   }
+  // Same sleep already stored as an unconfirmed sensor row under another id
+  // (e.g. a manual backfill, or a start that drifted across a 5-min bucket):
+  // reconcile into that row instead of inserting a duplicate.
+  let best: { row: SleepRow; ov: number } | null = null;
+  for (const row of existing) {
+    if (row.source !== "sensor" || row.confirmed) continue;
+    if (claimed?.has(row.id)) continue;
+    const ov = overlapMs(row.start_at, row.end_at, interval.start, interval.end);
+    const rowDur = Math.max(1, Date.parse(row.end_at) - Date.parse(row.start_at));
+    if (ov / Math.min(sensorDur, rowDur) >= 0.5 && (!best || ov > best.ov)) best = { row, ov };
+  }
+  if (best) {
+    if (best.row.start_at === interval.start && best.row.end_at === interval.end) {
+      return { action: "skip", reason: "unchanged", id: best.row.id, interval };
+    }
+    return { action: "update", id: best.row.id, interval };
+  }
   return { action: "insert", interval };
 }
 
@@ -282,35 +309,41 @@ export async function ingestSleep(
   let updated = 0;
   let skipped = 0;
   const decisions: IngestDecision[] = [];
+  const claimed = new Set<string>();
   for (const raw of intervals) {
     const interval: IngestInterval = {
       start: new Date(raw.start).toISOString(),
       end: new Date(raw.end).toISOString(),
       external_id: raw.external_id ?? `ha:${raw.start}|${raw.end}`,
+      in_progress: Boolean(raw.in_progress),
     };
     if (Date.parse(interval.end) <= Date.parse(interval.start)) {
       skipped += 1;
       decisions.push({ action: "skip", reason: "bad_range", interval });
       continue;
     }
-    const decision = decideSleepIngest(existing, interval);
+    const decision = decideSleepIngest(existing, interval, claimed);
     decisions.push(decision);
+    if ("id" in decision && decision.id) claimed.add(decision.id);
     if (decision.action === "skip") {
       skipped += 1;
       continue;
     }
     if (decision.action === "update") {
       const now = nowIso();
+      const inProgress = interval.in_progress ? 1 : 0;
       await env.DB.prepare(
         `UPDATE sleep_sessions
-         SET start_at = ?, end_at = ?, local_date = ?, updated_at = ?
+         SET start_at = ?, end_at = ?, local_date = ?, in_progress = ?, updated_at = ?, external_id = ?
          WHERE id = ? AND source = 'sensor' AND confirmed = 0`,
       )
         .bind(
           interval.start,
           interval.end,
           sleepDay(interval.end, tz),
+          inProgress,
           now,
+          interval.external_id ?? null,
           decision.id,
         )
         .run();
@@ -322,6 +355,8 @@ export async function ingestSleep(
           start_at: interval.start,
           end_at: interval.end,
           local_date: sleepDay(interval.end, tz),
+          in_progress: inProgress,
+          external_id: interval.external_id ?? existing[idx].external_id,
         };
       }
       continue;
@@ -333,6 +368,7 @@ export async function ingestSleep(
       confirmed: 0,
       external_id: interval.external_id,
       notes: null,
+      in_progress: interval.in_progress ? 1 : 0,
     });
     existing.push(row);
     inserted += 1;

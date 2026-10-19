@@ -70,12 +70,23 @@ Sessions are start/end intervals. A day is the **local date of `end_at`** (`DREA
 | POST | `/api/sleep/:id/split` | `{ at }` ISO time inside the session |
 | POST | `/api/sleep/merge` | `{ a, b }` ids |
 | POST | `/api/ingest/sleep` | see below |
+| POST | `/api/sync/sleep` | pull Home Assistant history now. Optional `{ hours }` or `?hours=` (default 36, max 14 days). Same Access / bearer auth |
 
 Each session: `source` is `sensor` | `manual` | `edited`. Sensor ingest is **unconfirmed** until you confirm or edit.
 
 #### Bed-sensor ingest (Home Assistant)
 
-Idempotent. Edited / confirmed sessions win; a matching `external_id` will not be clobbered.
+The Worker pulls HA history itself on the noon cron (after scale sync) and via `POST /api/sync/sleep`. It does **not** use `binary_sensor.bed_sensor_*_occupancy` (those flags get stuck). Sessions are built from pad pressure + out-of-bedroom motion + `person.sahil`, with no LLM.
+
+- Pads read ~296 while he lies still and only **spike** above `SLEEP_PRESSURE_THRESHOLD` (default 330) for a few seconds when he moves. A stuck-high value is one rising edge, not occupancy — it never extends a session past sustained outside motion.
+- A session **starts** at the first bed pressure spike (>330) after the last sustained living-room / kitchen / bathroom motion. It **holds** through empty (~296) and stuck-high pressure while he’s home. It **ends** where sustained outside motion begins (or the phone leaves home). Sustained = motion triggers chained with ≤10 min gaps spanning ≥3 min with ≥3 triggers (the sensors only hold "on" ~30–60s per trigger). A closed session needs ≥2 spikes (a lone spike is a sit, not sleep). Device occupancy flags are never used.
+- Reconciliation: same `external_id` → update; otherwise an overlapping unconfirmed sensor row (≥50% of the shorter) is updated in place (adopting the new id); edited / confirmed / manual rows are never overwritten.
+- Require ≥20 min with no sustained outside motion. Ignore spikes while `person.sahil` is away. Naps count. Brief bathroom blips do not end a night.
+- Stable `external_id` from the start time rounded to 5 minutes (`ha:sleep:<iso>`). Reruns update rather than duplicate.
+- If there’s no outside motion since the last spike at sync time, the session is saved `in_progress` with `end_at` = now (“in bed until at least 12:00”). The next run extends or closes it.
+- Sensor sessions stay unconfirmed. Edited / confirmed rows are never overwritten (same ingest rule as below).
+
+`POST /api/ingest/sleep` still accepts pre-built intervals (homebot / debug):
 
 ```bash
 curl -s http://127.0.0.1:8787/api/ingest/sleep \
@@ -84,7 +95,7 @@ curl -s http://127.0.0.1:8787/api/ingest/sleep \
   -d '{
     "intervals": [
       {
-        "external_id": "ha:binary_sensor.bed_occupancy:2026-10-19T06:12:00Z",
+        "external_id": "ha:sleep:2026-10-19T06:10:00.000Z",
         "start": "2026-10-19T06:12:00Z",
         "end": "2026-10-19T14:04:00Z"
       }
@@ -92,9 +103,7 @@ curl -s http://127.0.0.1:8787/api/ingest/sleep \
   }'
 ```
 
-Also accepts a single `{ start, end, external_id }`. Response: `{ inserted, updated, skipped, decisions }`.
-
-Use occupancy **intervals** (on→off), not raw pressure. `bs.ultron.sh` is the debug UI for the bed sensor; this ingest is the write path into DREAM.
+Also accepts a single `{ start, end, external_id, in_progress? }`. Response: `{ inserted, updated, skipped, decisions }`.
 
 ### Food
 
@@ -140,7 +149,7 @@ Manual entries and Wyze Scale X readings share the weight view (`source` is `man
 | GET | `/api/scale` | `{ measurements, latest, previous, sync }` — full body-comp history |
 | POST | `/api/sync/scale` | pull Wyze history now (same Access / bearer auth). First run backfills from 2015-01-01; later runs from last reading − 7 days |
 
-Daily cron: `0 16 * * *` and `0 17 * * *` UTC, with a Worker guard that only runs when `America/New_York` local hour is 12 (EDT vs EST). Tokens live in D1 (`scale_sync_state`); refresh-first, login at most once per run (Wyze rate-limits login). Scale rows are upserted on the scale `data_id`.
+Daily cron: `0 16 * * *` and `0 17 * * *` UTC, with a Worker guard that only runs when `America/New_York` local hour is 12 (EDT vs EST). At noon the Worker runs **scale sync, then sleep sync**; each is isolated so one failure does not skip the other. Wyze tokens live in D1 (`scale_sync_state`); refresh-first, login at most once per run (Wyze rate-limits login). Scale rows are upserted on the scale `data_id`. Sleep sync status lives in `sleep_sync_state`.
 
 ## Deploy to dream.ultron.sh
 
@@ -167,6 +176,8 @@ Do **not** deploy from this PR until you want it live. Account is the same Cloud
    npx wrangler secret put WYZE_PASSWORD
    npx wrangler secret put WYZE_KEY_ID
    npx wrangler secret put WYZE_API_KEY
+   npx wrangler secret put HA_URL                # Home Assistant base URL, no trailing path
+   npx wrangler secret put HA_TOKEN              # long-lived access token
    # optional:
    npx wrangler secret put LLM_API_KEY
    npx wrangler secret put WYZE_TOTP_SECRET      # authenticator MFA only
@@ -202,7 +213,7 @@ USDA: get a free key at [api.data.gov](https://api.data.gov/signup/) if `DEMO_KE
 
 ## Home Assistant sketch
 
-On occupancy falling edge, POST the occupied interval to `/api/ingest/sleep`. Keep a unique `external_id` per interval so retries are safe. Do not send overlapping guesses on top of a night you already edited in the app.
+The Worker GETs `/api/history/period/<start>?filter_entity_id=...&end_time=...` with `HA_URL` + `HA_TOKEN` (~36 hours, noon NY cron plus `POST /api/sync/sleep`). Do not use `binary_sensor.bed_sensor_*_occupancy`. `SLEEP_PRESSURE_THRESHOLD` is a Worker var (default `330`). `POST /api/ingest/sleep` remains for pushing pre-built intervals. Do not send overlapping guesses on top of a night you already edited in the app.
 
 ## Product notes
 

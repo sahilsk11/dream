@@ -17,6 +17,9 @@ export type Bindings = {
   WYZE_KEY_ID?: string;
   WYZE_API_KEY?: string;
   WYZE_TOTP_SECRET?: string;
+  HA_URL?: string;
+  HA_TOKEN?: string;
+  SLEEP_PRESSURE_THRESHOLD?: string;
 };
 
 export type SleepSource = "sensor" | "manual" | "edited";
@@ -32,7 +35,16 @@ export type SleepRow = {
   external_id: string | null;
   notes: string | null;
   is_example: number;
+  in_progress: number;
   created_at: string;
+  updated_at: string;
+};
+
+export type SleepSyncState = {
+  id: string;
+  last_sync_at: string | null;
+  last_error: string | null;
+  last_count: number | null;
   updated_at: string;
 };
 

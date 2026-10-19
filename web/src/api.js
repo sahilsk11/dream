@@ -48,4 +48,6 @@ export const api = {
   deleteWeight: (id) => request(`/api/weight/${id}`, { method: "DELETE" }),
   scale: () => request("/api/scale"),
   syncScale: () => request("/api/sync/scale", { method: "POST", body: {} }),
+  syncSleep: (hours) =>
+    request("/api/sync/sleep", { method: "POST", body: hours != null ? { hours } : {} }),
 };
