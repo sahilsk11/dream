@@ -78,11 +78,11 @@ Each session: `source` is `sensor` | `manual` | `edited`. Sensor ingest is **unc
 
 The Worker pulls HA history itself on the noon cron (after scale sync) and via `POST /api/sync/sleep`. It does **not** use `binary_sensor.bed_sensor_*_occupancy` (those flags get stuck). Sessions are built from pad pressure + out-of-bedroom motion + `person.sahil`, with no LLM.
 
-- In bed = left or right `sensor.bed_sensor_*_illuminance` > `SLEEP_PRESSURE_THRESHOLD` (default 330; empty ~296, occupied ~360). Last value holds.
-- Merge gaps under 20 min when out-of-bedroom motion did not last 10+ min; split on 20+ min gaps or 10+ min living-room / kitchen / bathroom occupancy.
-- Drop stretches under 20 min. Ignore stretches while `person.sahil` is away. Naps count.
+- Pads read ~296 while he lies still and only **spike** above `SLEEP_PRESSURE_THRESHOLD` (default 330) for a few seconds when he moves. A stuck-high value is one rising edge, not occupancy — it never extends a session past sustained outside motion.
+- A session **starts** at the first bed spike after the last living-room / kitchen / bathroom occupancy. It **continues** while he’s home and outside motion is not sustained (>3 min). It **ends** at the last bed spike just before that motion (or at the motion if there’s no wake spike).
+- Require ≥20 min with no sustained outside motion. Ignore spikes while `person.sahil` is away. Naps count. Brief bathroom blips do not end a night.
 - Stable `external_id` from the start time rounded to 5 minutes (`ha:sleep:<iso>`). Reruns update rather than duplicate.
-- If still in bed at sync time, the session is saved `in_progress` with `end_at` = now (“in bed until at least 12:00”). The next run extends or closes it.
+- If there’s no outside motion since the last spike at sync time, the session is saved `in_progress` with `end_at` = now (“in bed until at least 12:00”). The next run extends or closes it.
 - Sensor sessions stay unconfirmed. Edited / confirmed rows are never overwritten (same ingest rule as below).
 
 `POST /api/ingest/sleep` still accepts pre-built intervals (homebot / debug):

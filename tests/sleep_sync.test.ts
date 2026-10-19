@@ -11,9 +11,11 @@ import {
   type HaState,
 } from "../worker/ha.ts";
 import {
+  MOTION_PERSIST_MS,
   buildSleepSessions,
   isHome,
   isInBed,
+  risingEdges,
   sleepExternalId,
 } from "../worker/sleep_build.ts";
 import { ingestSleep } from "../worker/sleep.ts";
@@ -24,7 +26,21 @@ import { app } from "../worker/index.ts";
 const here = dirname(fileURLToPath(import.meta.url));
 const fixture = JSON.parse(
   readFileSync(join(here, "fixtures/ha_sleep_history.json"), "utf8"),
-) as { start: string; end: string; history: HaState[][] };
+) as {
+  start: string;
+  end: string;
+  history: HaState[][];
+  expected: { start: string; end: string };
+};
+
+function etTime(iso: string): string {
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(new Date(iso));
+}
 
 function st(entity_id: string, last_changed: string, state: string | number): HaState {
   return { entity_id, state: String(state), last_changed, last_updated: last_changed };
@@ -154,37 +170,54 @@ describe("pressure / presence helpers", () => {
   });
 });
 
-describe("session building from fixture history", () => {
+describe("session building from Oct 18→19 fixture", () => {
   const opts = {
     startMs: Date.parse(fixture.start),
     endMs: Date.parse(fixture.end),
   };
 
-  it("keeps the nap and merged overnight, drops away-occupancy and short sits", () => {
+  it("builds 3:53am–10:48am ET; nap kept; away spike and short sit dropped", () => {
     const sessions = buildSleepSessions(fixture.history, opts);
+    assert.equal(etTime(fixture.expected.start), "03:53");
+    assert.equal(etTime(fixture.expected.end), "10:48");
     assert.deepEqual(
       sessions.map((s) => ({ start: s.start, end: s.end, in_progress: s.in_progress })),
       [
         {
           start: "2026-10-18T18:10:00.000Z",
-          end: "2026-10-18T18:52:00.000Z",
+          end: "2026-10-18T18:50:00.000Z",
           in_progress: false,
         },
         {
-          start: "2026-10-19T03:05:00.000Z",
-          end: "2026-10-19T11:00:00.000Z",
+          start: fixture.expected.start,
+          end: fixture.expected.end,
           in_progress: false,
         },
       ],
     );
-    assert.equal(sessions[1].external_id, sleepExternalId("2026-10-19T03:05:00.000Z"));
+    assert.equal(sessions[1].external_id, sleepExternalId(fixture.expected.start));
     assert.equal(indexHaHistory(fixture.history).has("binary_sensor.bed_sensor_left_occupancy"), false);
   });
 
-  it("merges a <20 min bathroom gap with only 4 min of motion", () => {
-    const night = buildSleepSessions(fixture.history, opts).find((s) => s.start.startsWith("2026-10-19"));
-    assert.equal(night?.start, "2026-10-19T03:05:00.000Z");
-    assert.equal(night?.end, "2026-10-19T11:00:00.000Z");
+  it("does not let stuck 360 from 10:39–11:33 extend past morning motion", () => {
+    const night = buildSleepSessions(fixture.history, opts).find((s) => s.start === fixture.expected.start);
+    assert.equal(night?.end, "2026-10-19T14:48:00.000Z");
+    const left = indexHaHistory(fixture.history).get("sensor.bed_sensor_left_illuminance")!;
+    const edges = risingEdges(left, 330, Date.parse(fixture.start));
+    assert.ok(edges.includes(Date.parse("2026-10-19T14:38:00.000Z")));
+    assert.equal(
+      edges.includes(Date.parse("2026-10-19T15:33:00.000Z")),
+      false,
+      "falling back to 296 is not a spike",
+    );
+  });
+
+  it("does not split the night on a ~80s bathroom blip", () => {
+    assert.ok(MOTION_PERSIST_MS > 80_000);
+    const sessions = buildSleepSessions(fixture.history, opts).filter((s) => s.start.startsWith("2026-10-19"));
+    assert.equal(sessions.length, 1);
+    assert.equal(sessions[0].start, fixture.expected.start);
+    assert.equal(sessions[0].end, fixture.expected.end);
   });
 });
 
@@ -193,104 +226,119 @@ describe("session building edge cases", () => {
   const end = "2026-10-19T12:00:00.000Z";
   const opts = { startMs: Date.parse(start), endMs: Date.parse(end) };
 
-  it("splits on a 20+ min out-of-bed gap", () => {
+  it("starts after the last outside motion, ends at the last spike before persistent motion", () => {
     const history = pack([
       [
-        st("sensor.bed_sensor_left_illuminance", start, 360),
-        st("sensor.bed_sensor_left_illuminance", "2026-10-19T04:00:00.000Z", 296),
-        st("sensor.bed_sensor_left_illuminance", "2026-10-19T04:25:00.000Z", 360),
-        st("sensor.bed_sensor_left_illuminance", "2026-10-19T08:00:00.000Z", 296),
+        st("sensor.bed_sensor_left_illuminance", start, 296),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T01:00:00.000Z", 360),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T01:00:08.000Z", 296),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T04:00:00.000Z", 360),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T04:00:08.000Z", 296),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T08:00:00.000Z", 355),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T08:00:08.000Z", 296),
       ],
-      [st("sensor.bed_sensor_right_illuminance", start, 296)],
+      [
+        st("binary_sensor.living_room_motion_occupancy", start, "on"),
+        st("binary_sensor.living_room_motion_occupancy", "2026-10-19T00:50:00.000Z", "off"),
+        st("binary_sensor.living_room_motion_occupancy", "2026-10-19T08:10:00.000Z", "on"),
+        st("binary_sensor.living_room_motion_occupancy", "2026-10-19T08:20:00.000Z", "off"),
+      ],
       [st("person.sahil", start, "home")],
     ]);
     const sessions = buildSleepSessions(history, opts);
-    assert.deepEqual(
-      sessions.map((s) => [s.start, s.end]),
-      [
-        ["2026-10-19T00:00:00.000Z", "2026-10-19T04:00:00.000Z"],
-        ["2026-10-19T04:25:00.000Z", "2026-10-19T08:00:00.000Z"],
-      ],
-    );
+    assert.deepEqual(sessions.map((s) => [s.start, s.end, s.in_progress]), [
+      ["2026-10-19T01:00:00.000Z", "2026-10-19T08:00:00.000Z", false],
+    ]);
   });
 
-  it("splits when out-of-bedroom motion lasts more than 10 min even if the bed gap is short", () => {
+  it("ends at persistent motion when there is no wake spike", () => {
     const history = pack([
       [
-        st("sensor.bed_sensor_left_illuminance", start, 360),
-        st("sensor.bed_sensor_left_illuminance", "2026-10-19T04:00:00.000Z", 296),
-        st("sensor.bed_sensor_left_illuminance", "2026-10-19T04:12:00.000Z", 360),
-        st("sensor.bed_sensor_left_illuminance", "2026-10-19T08:00:00.000Z", 296),
+        st("sensor.bed_sensor_left_illuminance", start, 296),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T01:00:00.000Z", 360),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T01:00:08.000Z", 296),
       ],
-      [st("sensor.bed_sensor_right_illuminance", start, 296)],
       [
         st("binary_sensor.kitchen_cabinet_motion_occupancy", start, "off"),
-        st("binary_sensor.kitchen_cabinet_motion_occupancy", "2026-10-19T04:00:00.000Z", "on"),
-        st("binary_sensor.kitchen_cabinet_motion_occupancy", "2026-10-19T04:12:00.000Z", "off"),
+        st("binary_sensor.kitchen_cabinet_motion_occupancy", "2026-10-19T08:00:00.000Z", "on"),
+        st("binary_sensor.kitchen_cabinet_motion_occupancy", "2026-10-19T08:10:00.000Z", "off"),
       ],
       [st("person.sahil", start, "home")],
     ]);
     const sessions = buildSleepSessions(history, opts);
-    assert.deepEqual(
-      sessions.map((s) => [s.start, s.end]),
-      [
-        ["2026-10-19T00:00:00.000Z", "2026-10-19T04:00:00.000Z"],
-        ["2026-10-19T04:12:00.000Z", "2026-10-19T08:00:00.000Z"],
-      ],
-    );
+    assert.deepEqual(sessions.map((s) => [s.start, s.end]), [
+      ["2026-10-19T01:00:00.000Z", "2026-10-19T08:00:00.000Z"],
+    ]);
   });
 
-  it("splits an in-bed stretch when motion stays on 10+ min with stuck pressure", () => {
+  it("does not treat a stuck-high pad as occupancy through sustained motion", () => {
     const history = pack([
-      [st("sensor.bed_sensor_left_illuminance", start, 360), st("sensor.bed_sensor_left_illuminance", "2026-10-19T08:00:00.000Z", 296)],
-      [st("sensor.bed_sensor_right_illuminance", start, 296)],
+      [
+        st("sensor.bed_sensor_left_illuminance", start, 296),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T01:00:00.000Z", 360),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T01:00:08.000Z", 296),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T07:00:00.000Z", 360),
+      ],
       [
         st("binary_sensor.living_room_motion_occupancy", start, "off"),
-        st("binary_sensor.living_room_motion_occupancy", "2026-10-19T04:00:00.000Z", "on"),
-        st("binary_sensor.living_room_motion_occupancy", "2026-10-19T04:15:00.000Z", "off"),
+        st("binary_sensor.living_room_motion_occupancy", "2026-10-19T07:05:00.000Z", "on"),
+        st("binary_sensor.living_room_motion_occupancy", "2026-10-19T08:00:00.000Z", "off"),
       ],
       [st("person.sahil", start, "home")],
     ]);
     const sessions = buildSleepSessions(history, opts);
-    assert.deepEqual(
-      sessions.map((s) => [s.start, s.end]),
-      [
-        ["2026-10-19T00:00:00.000Z", "2026-10-19T04:00:00.000Z"],
-        ["2026-10-19T04:15:00.000Z", "2026-10-19T08:00:00.000Z"],
-      ],
-    );
+    assert.equal(sessions.length, 1);
+    assert.equal(sessions[0].start, "2026-10-19T01:00:00.000Z");
+    assert.equal(sessions[0].end, "2026-10-19T07:00:00.000Z");
+    assert.notEqual(sessions[0].end, "2026-10-19T08:00:00.000Z");
   });
 
-  it("drops stretches under 20 min", () => {
+  it("drops a spike cluster with under 20 min of no motion", () => {
     const history = pack([
       [
         st("sensor.bed_sensor_left_illuminance", start, 296),
         st("sensor.bed_sensor_left_illuminance", "2026-10-19T04:00:00.000Z", 360),
-        st("sensor.bed_sensor_left_illuminance", "2026-10-19T04:15:00.000Z", 296),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T04:00:08.000Z", 296),
+      ],
+      [
+        st("binary_sensor.living_room_motion_occupancy", start, "off"),
+        st("binary_sensor.living_room_motion_occupancy", "2026-10-19T04:10:00.000Z", "on"),
+        st("binary_sensor.living_room_motion_occupancy", "2026-10-19T04:20:00.000Z", "off"),
       ],
       [st("person.sahil", start, "home")],
     ]);
     assert.equal(buildSleepSessions(history, opts).length, 0);
   });
 
-  it("ignores in-bed stretches while person.sahil is away", () => {
+  it("ignores bed spikes while person.sahil is away", () => {
     const history = pack([
-      [st("sensor.bed_sensor_left_illuminance", start, 360)],
+      [
+        st("sensor.bed_sensor_left_illuminance", start, 296),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T01:00:00.000Z", 360),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T01:00:08.000Z", 296),
+      ],
       [st("person.sahil", start, "not_home")],
     ]);
     assert.equal(buildSleepSessions(history, opts).length, 0);
   });
 
-  it("marks a session in_progress when still in bed at sync time", () => {
+  it("keeps the session open with end=now when there is no outside motion since the last spike", () => {
     const history = pack([
-      [st("sensor.bed_sensor_left_illuminance", start, 360)],
+      [
+        st("sensor.bed_sensor_left_illuminance", start, 296),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T01:00:00.000Z", 360),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T01:00:08.000Z", 296),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T04:00:00.000Z", 355),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T04:00:08.000Z", 296),
+      ],
       [st("person.sahil", start, "home")],
     ]);
     const sessions = buildSleepSessions(history, opts);
     assert.equal(sessions.length, 1);
     assert.equal(sessions[0].in_progress, true);
+    assert.equal(sessions[0].start, "2026-10-19T01:00:00.000Z");
     assert.equal(sessions[0].end, end);
-    assert.equal(sessions[0].external_id, sleepExternalId(start));
+    assert.equal(sessions[0].external_id, sleepExternalId("2026-10-19T01:00:00.000Z"));
   });
 });
 
@@ -313,11 +361,11 @@ describe("reconciliation", () => {
   it("never overwrites an edited or confirmed session with the same external_id", async () => {
     const env = testEnv();
     const db = (env as Bindings & { _db: ReturnType<typeof mockSleepDb> })._db;
-    const ext = sleepExternalId("2026-10-19T03:05:00.000Z");
+    const ext = sleepExternalId(fixture.expected.start);
     db.sessions.set("edited-night", {
       id: "edited-night",
-      start_at: "2026-10-19T03:00:00.000Z",
-      end_at: "2026-10-19T11:30:00.000Z",
+      start_at: "2026-10-19T07:50:00.000Z",
+      end_at: "2026-10-19T15:00:00.000Z",
       local_date: "2026-10-19",
       source: "edited",
       confirmed: 1,
@@ -334,18 +382,22 @@ describe("reconciliation", () => {
     });
     const result = await ingestSleep(env, "America/New_York", built);
     assert.ok(result.decisions.some((d) => d.action === "skip" && d.reason === "edited_wins"));
-    assert.equal(db.sessions.get("edited-night")?.end_at, "2026-10-19T11:30:00.000Z");
+    assert.equal(db.sessions.get("edited-night")?.end_at, "2026-10-19T15:00:00.000Z");
   });
 
-  it("extends an in-progress sensor session then closes it with the real end", async () => {
+  it("extends an in-progress sensor session then closes it with the last spike", async () => {
     const env = testEnv();
     const db = (env as Bindings & { _db: ReturnType<typeof mockSleepDb> })._db;
-    const start = "2026-10-19T03:05:00.000Z";
+    const start = fixture.expected.start;
     const noon = "2026-10-19T16:00:00.000Z";
-    const wake = "2026-10-19T11:00:00.000Z";
+    const lastSpike = fixture.expected.end;
     const historyOpen = pack([
-      [st("sensor.bed_sensor_left_illuminance", start, 360)],
-      [st("person.sahil", start, "home")],
+      [
+        st("sensor.bed_sensor_left_illuminance", "2026-10-18T04:00:00.000Z", 296),
+        st("sensor.bed_sensor_left_illuminance", start, 360),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T07:53:08.000Z", 296),
+      ],
+      [st("person.sahil", "2026-10-18T04:00:00.000Z", "home")],
     ]);
     const open = buildSleepSessions(historyOpen, {
       startMs: Date.parse("2026-10-18T04:00:00.000Z"),
@@ -362,21 +414,29 @@ describe("reconciliation", () => {
 
     const historyClosed = pack([
       [
+        st("sensor.bed_sensor_left_illuminance", "2026-10-18T04:00:00.000Z", 296),
         st("sensor.bed_sensor_left_illuminance", start, 360),
-        st("sensor.bed_sensor_left_illuminance", wake, 296),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T07:53:08.000Z", 296),
+        st("sensor.bed_sensor_left_illuminance", lastSpike, 357),
+        st("sensor.bed_sensor_left_illuminance", "2026-10-19T14:48:08.000Z", 296),
       ],
-      [st("person.sahil", start, "home")],
+      [
+        st("binary_sensor.living_room_motion_occupancy", "2026-10-18T04:00:00.000Z", "off"),
+        st("binary_sensor.living_room_motion_occupancy", "2026-10-19T14:50:00.000Z", "on"),
+        st("binary_sensor.living_room_motion_occupancy", "2026-10-19T15:20:00.000Z", "off"),
+      ],
+      [st("person.sahil", "2026-10-18T04:00:00.000Z", "home")],
     ]);
     const closed = buildSleepSessions(historyClosed, {
       startMs: Date.parse("2026-10-18T04:00:00.000Z"),
       endMs: Date.parse("2026-10-20T16:00:00.000Z"),
     });
     assert.equal(closed[0].in_progress, false);
-    assert.equal(closed[0].end, wake);
+    assert.equal(closed[0].end, lastSpike);
     assert.equal(closed[0].external_id, open[0].external_id);
     const second = await ingestSleep(env, "America/New_York", closed);
     assert.equal(second.updated, 1);
-    assert.equal(row.end_at, wake);
+    assert.equal(row.end_at, lastSpike);
     assert.equal(row.in_progress, 0);
     assert.equal(db.sessions.size, 1);
   });
